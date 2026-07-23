@@ -1,0 +1,27 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Navy Building (Background) -->
+  <path d="M280 440V120C280 108.954 288.954 100 300 100H420C431.046 100 440 108.954 440 120V440H280Z" fill="#0f172a"/>
+  
+  <!-- Gray Building (Middle) -->
+  <path d="M120 440V240C120 228.954 128.954 220 140 220H260C271.046 220 280 228.954 280 240V440H120Z" fill="#334155"/>
+  
+  <!-- Windows on Navy Building -->
+  <rect x="310" y="140" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="380" y="140" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="310" y="220" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="380" y="220" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="310" y="300" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="380" y="300" width="30" height="40" rx="4" fill="white" fill-opacity="0.9"/>
+
+  <!-- Windows on Gray Building -->
+  <rect x="150" y="260" width="24" height="32" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="206" y="260" width="24" height="32" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="150" y="330" width="24" height="32" rx="4" fill="white" fill-opacity="0.9"/>
+  <rect x="206" y="330" width="24" height="32" rx="4" fill="white" fill-opacity="0.9"/>
+  
+  <!-- Coral Red Map Pin (Foreground) -->
+  <path d="M220 380C220 380 100 240 100 180C100 113.726 153.726 60 220 60C286.274 60 340 113.726 340 180C340 240 220 380 220 380Z" fill="#ff385c" stroke="white" stroke-width="12" stroke-linejoin="round"/>
+  
+  <!-- Pin Inner Circle -->
+  <circle cx="220" cy="180" r="40" fill="white"/>
+</svg>

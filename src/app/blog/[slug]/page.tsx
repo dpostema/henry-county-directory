@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (article) {
     return {
       title: `${article.title} | Henry County Blog`,
-      description: article.excerpt || "Read this article on the Henry County Directory.",
+      description: article.excerpt || "Read this article on t+*-he Henry County Directory.",
     };
   }
 

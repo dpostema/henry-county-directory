@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
+  const client = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
@@ -26,4 +26,16 @@ export async function createClient() {
       },
     }
   );
+
+  // Wrap getUser to catch unhandled throws from gotrue
+  const originalGetUser = client.auth.getUser.bind(client.auth);
+  client.auth.getUser = async (jwt?: string) => {
+    try {
+      return await originalGetUser(jwt);
+    } catch (error: any) {
+      return { data: { user: null }, error };
+    }
+  };
+
+  return client;
 }

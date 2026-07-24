@@ -69,28 +69,27 @@ export default function ListingCard({ business }: ListingCardProps) {
     e.stopPropagation();
   };
 
-  const fallbackSvg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'><rect width='100%' height='100%' fill='%23E9ECEF'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%236C757D'>${encodeURIComponent(business.name)}</text></svg>`;
+  const fallbackImages = [
+    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1497215728101-856f4ea42174?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1513161455079-7dc1de15ef3e?w=800&auto=format&fit=crop&q=60",
+    "https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=800&auto=format&fit=crop&q=60"
+  ];
+  const fallbackIndex = (business.name.length + (business.id ? business.id.charCodeAt(0) : 0)) % fallbackImages.length;
+  const fallbackImage = fallbackImages[fallbackIndex];
 
   return (
     <article className="group relative bg-white rounded-xl border border-brandBorder-light overflow-hidden hover:-translate-y-1 hover:shadow-lg transition-all duration-300 flex flex-col h-full">
       {/* Image */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-100">
-        {mainImage ? (
-          <Image
-            src={mainImage}
-            alt={business.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        ) : (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={fallbackSvg}
-            alt={business.name}
-            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
-          />
-        )}
+        <Image
+          src={mainImage || fallbackImage}
+          alt={business.name}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover group-hover:scale-105 transition-transform duration-500"
+        />
 
         {/* Badge */}
         {badgeText && (

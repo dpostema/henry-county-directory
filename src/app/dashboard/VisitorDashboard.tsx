@@ -315,9 +315,15 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
           `}>
             {/* Header / Brand Logo */}
             <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100">
-              <div className="w-9 h-9 rounded-xl bg-[#E8505B] text-white flex items-center justify-center font-black text-lg shadow-sm shadow-red-500/20">
-                <MapPin className="w-5 h-5 text-white" />
-              </div>
+              <Link href="/" className="flex-shrink-0">
+                <Image 
+                  src="/logo.svg" 
+                  alt="Henry County Directory Logo" 
+                  width={36} 
+                  height={36} 
+                  className="object-contain transition-transform hover:scale-105" 
+                />
+              </Link>
               <div>
                 <span className="font-heading font-black text-base tracking-tight text-slate-900 block leading-tight">
                   Henry<span className="text-[#E8505B]">Directory</span>

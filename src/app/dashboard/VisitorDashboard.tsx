@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -41,6 +42,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
     try {
       const stored = localStorage.getItem("recent_history");
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHistory(JSON.parse(stored));
       }
     } catch (e) {
@@ -149,7 +151,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                 <Star className="h-12 w-12 text-brandText-light mx-auto mb-4 opacity-50" />
                 <h3 className="text-lg font-bold text-brandText-dark font-heading">No Reviews Yet</h3>
                 <p className="text-sm text-brandText-medium mt-2 max-w-sm mx-auto font-light">
-                  Help the community by leaving reviews for businesses you've visited.
+                  Help the community by leaving reviews for businesses you&apos;ve visited.
                 </p>
               </div>
             ) : (

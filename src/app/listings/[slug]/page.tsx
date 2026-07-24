@@ -52,7 +52,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
   // Fetch Session User
   const { data: { user } } = await supabase.auth.getUser();
 
-  let business = dbBusiness;
+  const business = dbBusiness;
   let reviews: any[] = [];
   let qnas: any[] = [];
 

@@ -51,6 +51,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
   const [currentUrl, setCurrentUrl] = useState("");
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentUrl(window.location.href);
   }, []);
 

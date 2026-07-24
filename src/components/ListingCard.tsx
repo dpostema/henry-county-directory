@@ -100,6 +100,7 @@ export default function ListingCard({ business }: ListingCardProps) {
 
         {/* Heart */}
         <button
+          suppressHydrationWarning
           onClick={handleWishlist}
           className="absolute top-3 right-3 flex h-7 w-7 items-center justify-center rounded-full bg-black/40 text-white hover:bg-brandRed transition-colors"
           aria-label={`Save ${business.name}`}

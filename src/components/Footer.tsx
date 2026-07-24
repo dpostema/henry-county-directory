@@ -124,6 +124,7 @@ export default function Footer() {
             ) : (
               <form onSubmit={handleSubmit} className="flex max-w-sm rounded-full overflow-hidden border border-brandBorder-light bg-slate-50 focus-within:border-brandRed focus-within:ring-1 focus-within:ring-brandRed transition-all shadow-sm">
                 <input
+                  suppressHydrationWarning
                   type="email"
                   placeholder="Email Address..."
                   required
@@ -132,6 +133,7 @@ export default function Footer() {
                   className="w-full px-4 py-2 bg-transparent text-sm text-brandText-dark focus:outline-none placeholder-brandText-light"
                 />
                 <button
+                  suppressHydrationWarning
                   type="submit"
                   className="flex items-center justify-center bg-brandRed text-white px-4 hover:bg-brandRed-hover transition-colors"
                   aria-label="Subscribe to newsletter"

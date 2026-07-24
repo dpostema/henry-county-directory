@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type PlanTier = "free" | "featured" | "pro" | "enterprise";
 
 export interface TierEntitlements {

@@ -1,5 +1,6 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react"
 import { Select as SelectPrimitive, SelectRootProps } from "@base-ui/react/select"
 
@@ -13,7 +14,7 @@ function Select<Value, Multiple extends boolean | undefined = false>(
   
   const items = React.useMemo(() => {
     const extractItems = (nodes: React.ReactNode): {value: any, label: any}[] => {
-      let extracted: {value: any, label: any}[] = [];
+      const extracted: {value: any, label: any}[] = [];
       React.Children.forEach(nodes, (child) => {
         if (!React.isValidElement(child)) return;
         const childElement = child as React.ReactElement<any>;

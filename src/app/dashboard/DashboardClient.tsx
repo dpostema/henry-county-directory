@@ -171,6 +171,84 @@ export default function DashboardClient({
     return () => clearTimeout(timer);
   }, [selectedBusId, activeBusiness?.id]);
 
+  // Real data calculations for analytics
+  const { totalEngagement, percentageChange, chartData } = useMemo(() => {
+    let currentTotal = 0;
+    let previousTotal = 0;
+    
+    const now = new Date();
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    const sixtyDaysAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000);
+
+    const processItems = (arr: any[], dateField: string = "created_at") => {
+      arr.forEach(item => {
+        if (!item[dateField]) return;
+        const d = new Date(item[dateField]);
+        if (d >= thirtyDaysAgo) {
+          currentTotal++;
+        } else if (d >= sixtyDaysAgo && d < thirtyDaysAgo) {
+          previousTotal++;
+        }
+      });
+    };
+
+    processItems(leads);
+    processItems(reviews);
+    processItems(qnas);
+    processItems(bookings, "booking_time");
+    
+    // Overall engagement count (all time)
+    const engagement = leads.length + reviews.length + qnas.length + bookings.length;
+
+    // Percentage change calculation
+    let change = 0;
+    if (previousTotal === 0) {
+      change = currentTotal > 0 ? 100 : 0;
+    } else {
+      change = ((currentTotal - previousTotal) / previousTotal) * 100;
+    }
+
+    // Chart data for last 7 days
+    const chart = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+      d.setHours(0, 0, 0, 0);
+      const nextDay = new Date(d.getTime() + 24 * 60 * 60 * 1000);
+      
+      let count = 0;
+      const countForDay = (arr: any[], dateField: string = "created_at") => {
+        arr.forEach(item => {
+          if (!item[dateField]) return;
+          const itemDate = new Date(item[dateField]);
+          if (itemDate >= d && itemDate < nextDay) count++;
+        });
+      };
+      
+      countForDay(leads);
+      countForDay(reviews);
+      countForDay(qnas);
+      countForDay(bookings, "booking_time");
+      
+      chart.push({
+        label: `${d.getDate()} ${d.toLocaleString('default', { month: 'short' }).toUpperCase()}`,
+        count,
+      });
+    }
+    
+    // Calculate heights relative to max
+    const maxCount = Math.max(...chart.map(d => d.count), 1);
+    const chartWithHeights = chart.map(d => ({
+      ...d,
+      height: `${Math.max((d.count / maxCount) * 100, 5)}%` // minimum 5% height so it's visible
+    }));
+
+    return {
+      totalEngagement: engagement,
+      percentageChange: change,
+      chartData: chartWithHeights
+    };
+  }, [leads, reviews, qnas, bookings]);
+
   // Realtime leads subscription channel
   useEffect(() => {
     if (!selectedBusId) return;
@@ -710,10 +788,14 @@ export default function DashboardClient({
                       <span className="text-xs text-slate-400 font-semibold block">Listing Traffic & Engagement</span>
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-3xl font-extrabold text-slate-900 tracking-tight font-heading">
-                          {leads.length * 15 + (activeBusiness?.review_count || 0) * 12 + 148}
+                          {totalEngagement}
                         </span>
-                        <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full flex items-center gap-1 border border-emerald-100">
-                          <span>↗</span> +29.32%
+                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
+                          percentageChange >= 0 
+                            ? "text-emerald-600 bg-emerald-50 border-emerald-100" 
+                            : "text-red-600 bg-red-50 border-red-100"
+                        }`}>
+                          <span>{percentageChange >= 0 ? "↗" : "↘"}</span> {percentageChange > 0 ? "+" : ""}{percentageChange.toFixed(1)}%
                         </span>
                       </div>
                     </div>
@@ -726,22 +808,14 @@ export default function DashboardClient({
                   {/* Red Bar Chart Visual */}
                   <div className="pt-4 border-t border-slate-100">
                     <div className="h-36 flex items-end justify-between gap-2 px-2 pb-2">
-                      {[
-                        { label: "3 FEB", height: "55%" },
-                        { label: "4 FEB", height: "48%" },
-                        { label: "5 FEB", height: "70%" },
-                        { label: "6 FEB", height: "52%" },
-                        { label: "7 FEB", height: "82%" },
-                        { label: "8 FEB", height: "95%" },
-                        { label: "9 FEB", height: "65%" },
-                      ].map((dp, idx) => (
+                      {chartData.map((dp, idx) => (
                         <div key={idx} className="flex-1 flex flex-col items-center gap-2 h-full justify-end group">
                           <div 
                             className="w-full max-w-[28px] bg-[#E8505B] hover:bg-[#CF3641] rounded-t-md transition-all duration-300 relative shadow-xs"
                             style={{ height: dp.height }}
                           >
                             <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] py-0.5 px-1.5 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10 font-bold">
-                              {dp.height}
+                              {dp.count} {dp.count === 1 ? 'Action' : 'Actions'}
                             </div>
                           </div>
                           <span className="text-[9px] font-bold text-slate-400 tracking-wider uppercase">

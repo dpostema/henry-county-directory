@@ -4,7 +4,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
-import { callGemini } from "@/utils/ai";
+import { callOpenAI } from "@/utils/ai";
 
 export async function updateListingAction(formData: FormData) {
   const supabase = await createClient();
@@ -279,7 +279,7 @@ export async function replyToLeadMessageAction(leadId: string, replyText: string
 }
 
 export async function generateAIDescriptionAction(name: string, category: string) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
     // Graceful fallback description
@@ -290,7 +290,7 @@ export async function generateAIDescriptionAction(name: string, category: string
 
   try {
     const prompt = `Write a premium, engaging 3-sentence description for a local business named "${name}" in the category "${category}". Highlight their local community reputation, professional reliability, and top-tier service quality.`;
-    const text = await callGemini(prompt, "You are a professional marketing copywriter specializing in local businesses.");
+    const text = await callOpenAI(prompt, "You are a professional marketing copywriter specializing in local businesses.");
     return { description: text };
   } catch (err: any) {
     return { error: err.message };
@@ -298,7 +298,7 @@ export async function generateAIDescriptionAction(name: string, category: string
 }
 
 export async function generateAIReviewReplyAction(rating: number, comment: string) {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.OPENAI_API_KEY;
 
   if (!apiKey) {
     // Graceful fallback review reply
@@ -309,7 +309,7 @@ export async function generateAIReviewReplyAction(rating: number, comment: strin
 
   try {
     const prompt = `Write a short, professional, and appreciative response to a customer's ${rating}-star review that says: "${comment || "No comment left."}". Make it warm, authentic, and thank them for supporting local Henry County business.`;
-    const text = await callGemini(prompt, "You are a friendly customer success assistant representing a local business owner.");
+    const text = await callOpenAI(prompt, "You are a friendly customer success assistant representing a local business owner.");
     return { reply: text };
   } catch (err: any) {
     return { error: err.message };

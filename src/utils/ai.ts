@@ -1,38 +1,40 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-export async function callGemini(prompt: string, systemInstruction?: string): Promise<string> {
-  const apiKey = process.env.GEMINI_API_KEY;
+export async function callOpenAI(prompt: string, systemInstruction?: string): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not defined in environment variables.");
+    throw new Error("OPENAI_API_KEY is not defined in environment variables.");
   }
 
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+  const url = `https://api.openai.com/v1/chat/completions`;
   
-  const body: any = {
-    contents: [{ parts: [{ text: prompt }] }]
-  };
-
+  const messages = [];
   if (systemInstruction) {
-    body.systemInstruction = {
-      parts: [{ text: systemInstruction }]
-    };
+    messages.push({ role: "system", content: systemInstruction });
   }
+  messages.push({ role: "user", content: prompt });
 
   const res = await fetch(url, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apiKey}`
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini", // Using the fast, cheap GPT model
+      messages: messages,
+    }),
   });
 
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Gemini API HTTP Error: ${res.status} - ${res.statusText} - ${errText}`);
+    throw new Error(`OpenAI API HTTP Error: ${res.status} - ${res.statusText} - ${errText}`);
   }
 
   const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  const text = data.choices?.[0]?.message?.content;
   if (!text) {
-    throw new Error("Received empty content response from Gemini API.");
+    throw new Error("Received empty content response from OpenAI API.");
   }
 
   return text.trim();

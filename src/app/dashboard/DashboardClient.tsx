@@ -366,6 +366,7 @@ export default function DashboardClient({
   const [billingLoading, setBillingLoading] = useState(false);
   const [referralEmail, setReferralEmail] = useState("");
   const [referralLoading, setReferralLoading] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
 
   const handleUpgrade = async (planTier: string | null, addonType: string | null = null) => {
     setBillingLoading(true);
@@ -390,6 +391,27 @@ export default function DashboardClient({
       alert("Error initiating checkout: " + err.message);
     } finally {
       setBillingLoading(false);
+    }
+  };
+
+  const handleManageSubscription = async () => {
+    setPortalLoading(true);
+    try {
+      const res = await fetch('/api/stripe/portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ businessId: selectedBusId })
+      });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Failed to load portal');
+      }
+    } catch (err) {
+      alert('Error loading portal');
+    } finally {
+      setPortalLoading(false);
     }
   };
 
@@ -1875,113 +1897,6 @@ export default function DashboardClient({
             </div>
           )}
 
-          {activeTab === "billing" && (
-            <div className="space-y-8">
-              {/* Billing Info Notice */}
-              <div className="p-4 bg-slate-100 rounded-card border border-brandBorder-light shadow-sm text-xs flex items-center justify-between">
-                <div>
-                  <h4 className="font-bold text-brandText-dark">Billing Integration Status</h4>
-                  <p className="text-brandText-light font-light mt-0.5">
-                    {!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
-                      ? "Stripe API keys not loaded. The checkout triggers simulated instant upgrades for developer testing."
-                      : "Stripe connection active. Test payments are processed securely."}
-                  </p>
-                </div>
-                <span className="text-[10px] font-bold text-white bg-slate-900 px-2 py-0.5 rounded uppercase tracking-wider">
-                  {!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ? "Simulation Mode" : "Stripe Active"}
-                </span>
-              </div>
-
-              {/* Plans Upgrade Grid */}
-              <section className="space-y-4">
-                <h3 className="text-base font-bold text-brandText-dark font-heading">
-                  Available Pricing Tiers
-                </h3>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                  {/* Plan 1: Featured */}
-                  <div className="bg-brandBg-card p-5 rounded-card border border-brandBorder-light shadow-sm flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
-                      <span className="text-[9px] font-bold text-brandRed uppercase bg-red-50 border border-red-100 px-2 py-0.5 rounded-btn">
-                        Featured Tier
-                      </span>
-                      <h4 className="text-base font-bold text-brandText-dark font-heading">Featured Listing</h4>
-                      <p className="text-2xl font-black text-brandText-dark">$19<span className="text-xs font-light">/mo</span></p>
-                      <ul className="text-[11px] text-brandText-light font-light space-y-1">
-                        <li>&bull; Featured banner placements</li>
-                        <li>&bull; Highlights in search results</li>
-                        <li>&bull; Up to 5 media slots</li>
-                      </ul>
-                    </div>
-
-                    <button
-                      onClick={() => handleUpgrade("featured")}
-                      disabled={billingLoading || activeBusiness?.plan_tier === "featured"}
-                      className="w-full bg-brandRed hover:bg-brandRed-hover text-white text-xs font-bold py-2 rounded-btn shadow-sm transition disabled:opacity-50"
-                    >
-                      {activeBusiness?.plan_tier === "featured" ? "Active Plan" : billingLoading ? "Loading..." : "Subscribe"}
-                    </button>
-                  </div>
-
-                  {/* Plan 2: Pro */}
-                  <div className="bg-brandBg-card p-5 rounded-card border border-brandRed/20 shadow-md flex flex-col justify-between space-y-4 relative overflow-hidden ring-1 ring-brandRed/30">
-                    <span className="absolute top-2 right-2 text-[8px] font-bold text-white bg-brandRed px-2 py-0.5 rounded uppercase tracking-wider">
-                      Popular
-                    </span>
-
-                    <div className="space-y-2">
-                      <span className="text-[9px] font-bold text-slate-800 uppercase bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-btn">
-                        Pro Tier
-                      </span>
-                      <h4 className="text-base font-bold text-brandText-dark font-heading">Pro Tools Package</h4>
-                      <p className="text-2xl font-black text-brandText-dark">$49<span className="text-xs font-light">/mo</span></p>
-                      <ul className="text-[11px] text-brandText-light font-light space-y-1">
-                        <li>&bull; Booking Appointment Calendar</li>
-                        <li>&bull; Integrated Client Inbox</li>
-                        <li>&bull; AI Description Writer</li>
-                        <li>&bull; Competitor Benchmarking</li>
-                        <li>&bull; Up to 10 media slots</li>
-                      </ul>
-                    </div>
-
-                    <button
-                      onClick={() => handleUpgrade("pro")}
-                      disabled={billingLoading || activeBusiness?.plan_tier === "pro"}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl shadow-sm transition disabled:opacity-50"
-                    >
-                      {activeBusiness?.plan_tier === "pro" ? "Active Plan" : billingLoading ? "Loading..." : "Subscribe"}
-                    </button>
-                  </div>
-
-                  {/* Plan 3: Enterprise */}
-                  <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between space-y-4">
-                    <div className="space-y-2">
-                      <span className="text-[9px] font-bold text-indigo-800 uppercase bg-indigo-50 border border-indigo-100 px-2 py-0.5 rounded-full">
-                        Enterprise Tier
-                      </span>
-                      <h4 className="text-base font-bold text-slate-900 font-heading">Enterprise Suite</h4>
-                      <p className="text-2xl font-black text-slate-900">$99<span className="text-xs font-light">/mo</span></p>
-                      <ul className="text-[11px] text-slate-500 font-light space-y-1">
-                        <li>&bull; Multi-location Dashboard</li>
-                        <li>&bull; Priority support hotline</li>
-                        <li>&bull; Competitor insights reports</li>
-                        <li>&bull; Unlimited photo slots</li>
-                      </ul>
-                    </div>
-
-                    <button
-                      onClick={() => handleUpgrade("enterprise")}
-                      disabled={billingLoading || activeBusiness?.plan_tier === "enterprise"}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2.5 rounded-xl shadow-sm transition disabled:opacity-50"
-                    >
-                      {activeBusiness?.plan_tier === "enterprise" ? "Active Plan" : billingLoading ? "Loading..." : "Subscribe"}
-                    </button>
-                  </div>
-                </div>
-              </section>
-            </div>
-          )}
-
           {activeTab === "marketing" && (
             <div className="space-y-8 text-left font-sans">
               <div className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
@@ -2391,10 +2306,11 @@ export default function DashboardClient({
             </div>
 
             <button 
-              onClick={() => setActiveTab("billing")}
+              onClick={handleManageSubscription}
+                disabled={portalLoading}
               className="w-full text-center text-xs font-bold text-[#E8505B] hover:text-[#CF3641] transition-colors py-1 flex items-center justify-center gap-1.5 group cursor-pointer"
             >
-              <span>Manage Subscription & Billing</span>
+              <span>{portalLoading ? "Loading Portal..." : "Manage Subscription & Billing"}</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </button>
           </div>

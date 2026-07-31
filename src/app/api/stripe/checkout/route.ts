@@ -64,6 +64,8 @@ export async function POST(req: Request) {
 
     const customerId = profile?.stripe_customer_id;
 
+    const origin = req.headers.get("origin") || process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+
     const sessionConfig: any = {
       payment_method_types: ["card"],
       line_items: [
@@ -73,8 +75,8 @@ export async function POST(req: Request) {
         },
       ],
       mode: isSubscription ? "subscription" : "payment",
-      success_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/dashboard?checkout_success=true&business_id=${businessId}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/dashboard?checkout_cancel=true`,
+      success_url: `${origin}/dashboard?checkout_success=true&business_id=${businessId}`,
+      cancel_url: `${origin}/dashboard?checkout_cancel=true`,
       metadata: {
         userId: user.id,
         businessId: business.id,

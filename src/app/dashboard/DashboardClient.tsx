@@ -949,8 +949,7 @@ export default function DashboardClient({
                         <span className="text-[10px] text-slate-400 font-semibold block">Rating average</span>
                         <div className="text-sm font-bold text-slate-900 flex items-center justify-center space-x-2">
                           <span className="text-base text-emerald-600">{activeBusiness?.rating_avg?.toFixed(1) || "0.0"}</span>
-                          <span className="text-slate-400 font-light">vs</span>
-                          <span>4.2</span>
+                          <span className="text-slate-400 font-light">Stars</span>
                         </div>
                       </div>
 
@@ -958,17 +957,15 @@ export default function DashboardClient({
                         <span className="text-[10px] text-slate-400 font-semibold block">Total Inquiries</span>
                         <div className="text-sm font-bold text-slate-900 flex items-center justify-center space-x-2">
                           <span className="text-base text-emerald-600">{leads.length}</span>
-                          <span className="text-slate-400 font-light">vs</span>
-                          <span>5</span>
+                          <span className="text-slate-400 font-light">Leads</span>
                         </div>
                       </div>
 
                       <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl space-y-1">
-                        <span className="text-[10px] text-slate-400 font-semibold block">Monthly Clicks</span>
+                        <span className="text-[10px] text-slate-400 font-semibold block">Total Reviews</span>
                         <div className="text-sm font-bold text-slate-900 flex items-center justify-center space-x-2">
-                          <span className="text-base text-emerald-600">38</span>
-                          <span className="text-slate-400 font-light">vs</span>
-                          <span>24</span>
+                          <span className="text-base text-emerald-600">{reviews.length}</span>
+                          <span className="text-slate-400 font-light">Reviews</span>
                         </div>
                       </div>
                     </div>

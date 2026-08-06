@@ -133,6 +133,29 @@ export async function replyToReviewAction(reviewId: string, replyText: string) {
 
   if (error) return { error: error.message };
 
+  // 4. Send email to the reviewer
+  const { data: reviewInfo } = await supabase
+    .from("reviews")
+    .select("author:profiles(email, full_name), business:businesses(name)")
+    .eq("id", reviewId)
+    .single();
+
+  if ((reviewInfo?.author as any)?.email) {
+    const businessName = (reviewInfo.business as any)?.name || "Local Business";
+    const authorEmail = (reviewInfo.author as any).email;
+    await sendEmail({
+      to: authorEmail,
+      subject: `Reply to your review from ${businessName}`,
+      html: generateEmailHtml(businessName, `
+        <h3>${businessName} replied to your review!</h3>
+        <p>You recently left a review for ${businessName} on the Henry County Directory. The business owner has sent a response:</p>
+        <div class="box">
+          <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${replyText}</p>
+        </div>
+      `)
+    });
+  }
+
   revalidatePath("/dashboard");
   return { success: "Reply saved successfully!" };
 }
@@ -153,6 +176,29 @@ export async function answerQuestionAction(qnaId: string, answerText: string) {
     .eq("id", qnaId);
 
   if (error) return { error: error.message };
+
+  // Send email to the question author
+  const { data: qnaInfo } = await supabase
+    .from("qna")
+    .select("visitor:profiles(email, full_name), business:businesses(name)")
+    .eq("id", qnaId)
+    .single();
+
+  if ((qnaInfo?.visitor as any)?.email) {
+    const businessName = (qnaInfo.business as any)?.name || "Local Business";
+    const visitorEmail = (qnaInfo.visitor as any).email;
+    await sendEmail({
+      to: visitorEmail,
+      subject: `${businessName} answered your question`,
+      html: generateEmailHtml(businessName, `
+        <h3>${businessName} answered your question!</h3>
+        <p>You recently asked a question to ${businessName} on the Henry County Directory. The business owner has sent a response:</p>
+        <div class="box">
+          <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${answerText}</p>
+        </div>
+      `)
+    });
+  }
 
   revalidatePath("/dashboard");
   return { success: "Question answered successfully!" };
@@ -221,6 +267,29 @@ export async function updateBookingStatusAction(bookingId: string, status: "conf
     .eq("id", bookingId);
 
   if (error) return { error: error.message };
+
+  // Send email to the booking visitor
+  const { data: bookingInfo } = await supabase
+    .from("bookings")
+    .select("visitor:profiles(email, full_name), business:businesses(name)")
+    .eq("id", bookingId)
+    .single();
+
+  if ((bookingInfo?.visitor as any)?.email) {
+    const businessName = (bookingInfo.business as any)?.name || "Local Business";
+    const visitorEmail = (bookingInfo.visitor as any).email;
+    const actionText = status === "confirmed" ? "confirmed" : "cancelled";
+    
+    await sendEmail({
+      to: visitorEmail,
+      subject: `Booking ${actionText} by ${businessName}`,
+      html: generateEmailHtml(businessName, `
+        <h3>Your booking request was ${actionText}!</h3>
+        <p>The business owner for ${businessName} has ${actionText} your recent booking request.</p>
+        ${status === "confirmed" ? `<p>If you need to make changes, please contact the business directly.</p>` : ``}
+      `)
+    });
+  }
 
   revalidatePath("/dashboard");
   return { success: `Booking status marked as ${status}!` };

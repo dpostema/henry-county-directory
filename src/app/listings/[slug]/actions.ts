@@ -195,6 +195,30 @@ export async function submitReview(formData: FormData) {
       return { error: "Failed to submit review. Please try again later." };
     }
 
+    // Send email notification to business owner
+    const { data: business } = await supabase
+      .from("businesses")
+      .select("email, name")
+      .eq("id", businessId)
+      .single();
+
+    if (business?.email) {
+      await sendEmail({
+        to: business.email,
+        subject: `New Review for ${business.name}`,
+        html: generateEmailHtml("Henry County Directory", `
+          <h3>You received a new ${rating}-star review!</h3>
+          <p>Someone recently left a review on your directory listing.</p>
+          <div class="box">
+            <strong>Comment:</strong><br/>
+            ${comment || "No comment left."}
+          </div>
+          <p>Log in to your dashboard to reply to the review so it appears on your public listing.</p>
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
+        `)
+      });
+    }
+
     revalidatePath(`/listings/${slug}`);
     return { success: "Review submitted successfully!" };
   } catch (err) {

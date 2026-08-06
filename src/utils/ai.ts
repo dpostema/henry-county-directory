@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export async function callOpenAI(prompt: string, systemInstruction?: string): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY;

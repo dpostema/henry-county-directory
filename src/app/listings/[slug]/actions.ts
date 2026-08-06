@@ -6,7 +6,9 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { checkRateLimit } from "@/utils/rateLimit";
-import { callGemini } from "@/utils/ai";
+import { callOpenAI } from "@/utils/ai";
+import { sendEmail } from "@/utils/email";
+import { generateEmailHtml } from "@/utils/email-template";
 
 export async function submitLead(formData: FormData) {
   const headersList = await headers();
@@ -56,13 +58,13 @@ export async function submitLead(formData: FormData) {
     }
 
     // Gemini-based classification override if key is set
-    if (process.env.GEMINI_API_KEY) {
+    if (process.env.OPENAI_API_KEY) {
       try {
         const prompt = `Classify this customer message sent to a local business directory. Return exactly a JSON object matching this schema:
   {"tag": "High Intent" | "Employment Inquiry" | "General Inquiry", "priority": "high" | "medium" | "low"}.
   Do not include any explanation, markdown formatting, or other text.
   Message: "${message}"`;
-        const responseText = await callGemini(prompt, "You are a professional business lead triage assistant. Categorize lead intent strictly.");
+        const responseText = await callOpenAI(prompt, "You are a professional business lead triage assistant. Categorize lead intent strictly.");
         const cleanedText = responseText.replace(/```json/g, "").replace(/```/g, "").trim();
         const parsed = JSON.parse(cleanedText);
         if (parsed.tag && parsed.priority) {
@@ -70,7 +72,7 @@ export async function submitLead(formData: FormData) {
           priority = parsed.priority;
         }
       } catch (err) {
-        console.error("[GEMINI LEAD CLASSIFICATION ERROR]", err);
+        console.error("[OPENAI LEAD CLASSIFICATION ERROR]", err);
       }
     }
 
@@ -118,6 +120,33 @@ export async function submitLead(formData: FormData) {
       }
     } else {
       console.log(`[GHL LEAD SYNC MOCK] Synced lead for ${name} (${email}) to Location ${ghlLocationId}`);
+    }
+
+    // Send email notification to business owner
+    const { data: business } = await supabase
+      .from("businesses")
+      .select("email, name")
+      .eq("id", businessId)
+      .single();
+
+    if (business?.email) {
+      await sendEmail({
+        to: business.email,
+        subject: `New Lead for ${business.name}: ${aiTag}`,
+        html: generateEmailHtml("Henry County Directory", `
+          <h3>You have a new lead!</h3>
+          <p>Someone reached out to your business from your directory listing.</p>
+          <div class="box">
+            <p><strong>Name:</strong> ${name}</p>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+          </div>
+          <p><strong>Message:</strong></p>
+          <div class="box">
+            ${message}
+          </div>
+        `)
+      });
     }
 
     return { success: "Your message has been sent to the business owner!" };
@@ -206,6 +235,29 @@ export async function submitQuestion(formData: FormData) {
     if (error) {
       console.error("[SUBMIT QUESTION DB ERROR]", error);
       return { error: "Failed to submit question. Please try again later." };
+    }
+
+    const { data: business } = await supabase
+      .from("businesses")
+      .select("email, name")
+      .eq("id", businessId)
+      .single();
+
+    if (business?.email) {
+      await sendEmail({
+        to: business.email,
+        subject: `New Question for ${business.name}`,
+        html: generateEmailHtml("Henry County Directory", `
+          <h3>Someone asked a question on your listing!</h3>
+          <p>A visitor is looking for more information about your business.</p>
+          <div class="box">
+            <strong>Question:</strong><br/>
+            ${question}
+          </div>
+          <p>Log in to your dashboard to answer it so it appears on your public listing.</p>
+          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
+        `)
+      });
     }
 
     revalidatePath(`/listings/${slug}`);

@@ -5,7 +5,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
 import { callOpenAI } from "@/utils/ai";
-
+import { sendEmail } from "@/utils/email";
+import { generateEmailHtml } from "@/utils/email-template";
 export async function updateListingAction(formData: FormData) {
   const supabase = await createClient();
 
@@ -234,12 +235,18 @@ export async function replyToLeadMessageAction(leadId: string, replyText: string
   // 1. Fetch current lead message content
   const { data: lead, error: fetchError } = await supabase
     .from("leads")
-    .select("message")
+    .select("message, email, name, business_id, business:businesses(name, plan_tier)")
     .eq("id", leadId)
     .single();
 
   if (fetchError || !lead) {
     return { error: fetchError?.message || "Failed to load lead thread." };
+  }
+
+  const { getEntitlements } = await import("@/utils/entitlements");
+  const entitlements = getEntitlements((lead.business as any)?.plan_tier);
+  if (!entitlements.has_messaging_inbox) {
+    return { error: "Your current plan does not support replying to leads. Please upgrade." };
   }
 
   let thread: any[] = [];
@@ -273,6 +280,22 @@ export async function replyToLeadMessageAction(leadId: string, replyText: string
     .eq("id", leadId);
 
   if (saveError) return { error: saveError.message };
+
+  // 4. Send email to the lead
+  if (lead.email) {
+    const businessName = (lead.business as any)?.name || "Local Business";
+    await sendEmail({
+      to: lead.email,
+      subject: `Reply from ${businessName}`,
+      html: generateEmailHtml(businessName, `
+        <h3>${businessName} replied to your message!</h3>
+        <p>You recently reached out via the Henry County Directory. The business owner has sent a response:</p>
+        <div class="box">
+          <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${replyText}</p>
+        </div>
+      `)
+    });
+  }
 
   revalidatePath("/dashboard");
   return { success: "Reply saved to thread successfully!", thread };

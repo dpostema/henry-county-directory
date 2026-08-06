@@ -2,6 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/utils/supabase/server";
+import { generateEmailHtml } from "@/utils/email-template";
+
 
 export async function toggleFavoriteAction(businessId: string) {
   const supabase = await createClient();
@@ -73,6 +75,18 @@ export async function optInDigestAction(email: string, categories: string[]) {
   });
 
   if (error) return { error: error.message };
+
+  const { sendEmail } = await import("@/utils/email");
+  await sendEmail({
+    to: email,
+    subject: "Welcome to the Henry County Digest!",
+    html: generateEmailHtml("Henry County Directory", `
+      <h3>Thanks for subscribing!</h3>
+      <p>You will now receive weekly updates about the best local businesses, events, and promotions in Henry County right to your inbox.</p>
+      <p>Stay tuned for our next issue!</p>
+    `)
+  });
+
   return { success: "You have successfully subscribed to our weekly Henry County digest!" };
 }
 
@@ -149,6 +163,30 @@ export async function createBookingAction(businessId: string, bookingTime: strin
 
   if (error) {
     return { error: error.message };
+  }
+
+  const { data: business } = await supabase
+    .from("businesses")
+    .select("email, name")
+    .eq("id", businessId)
+    .single();
+
+  if (business?.email) {
+    const { sendEmail } = await import("@/utils/email");
+    await sendEmail({
+      to: business.email,
+      subject: `New Appointment Request for ${business.name}`,
+      html: generateEmailHtml("Henry County Directory", `
+        <h3>You have a new appointment request!</h3>
+        <p>A customer has requested to book an appointment with you.</p>
+        <div class="box">
+          <p><strong>Requested Time:</strong> ${new Date(bookingTime).toLocaleString()}</p>
+          <p><strong>Details:</strong> ${details || 'None provided.'}</p>
+        </div>
+        <p>Log in to your dashboard to approve or decline this request.</p>
+        <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
+      `)
+    });
   }
 
   return { success: "Appointment requested successfully! The business owner has been notified." };

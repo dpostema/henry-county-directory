@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.42.0";
+import { Resend } from "npm:resend";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -14,12 +15,15 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+    const resendApiKey = Deno.env.get("RESEND_API_KEY") ?? "";
+    const resendDomainName = Deno.env.get("RESEND_DOMAIN_NAME")?.trim() || "onboarding@resend.dev";
 
     if (!supabaseUrl || !supabaseServiceKey) {
       throw new Error("Missing Supabase environment variables.");
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const resend = new Resend(resendApiKey);
 
     const { email, phone, code, action } = await req.json();
 
@@ -67,6 +71,59 @@ Deno.serve(async (req) => {
 
       // Log it to output for testing/mock purposes (simulates SMS/Email delivery)
       console.log(`[OTP SYSTEM] Code for ${email || phone} is: ${generatedCode} (Expires: ${expiresAt})`);
+
+      if (email && resendApiKey) {
+        try {
+          const { error: resendError } = await resend.emails.send({
+            from: resendDomainName,
+            to: [email],
+            subject: "Your Verification Code",
+            html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f6f9fc; margin: 0; padding: 0; }
+    .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .header { background-color: #E8505B; padding: 30px 20px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 24px; }
+    .body { padding: 40px 30px; color: #334155; font-size: 16px; line-height: 1.6; }
+    .box { background-color: #f1f5f9; border-radius: 8px; padding: 20px; margin: 20px 0; border-left: 4px solid #E8505B; font-size: 24px; letter-spacing: 4px; text-align: center; font-weight: bold; }
+    .footer { background-color: #f8fafc; padding: 20px; text-align: center; color: #64748b; font-size: 14px; border-top: 1px solid #e2e8f0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Henry County Directory</h1>
+    </div>
+    <div class="body">
+      <h3 style="margin-top: 0; color: #0f172a;">Your Verification Code</h3>
+      <p>Use the following code to verify your identity. This code will expire in 15 minutes.</p>
+      <div class="box">
+        ${generatedCode}
+      </div>
+      <p>If you didn't request this code, you can safely ignore this email.</p>
+    </div>
+    <div class="footer">
+      &copy; ${new Date().getFullYear()} Henry County Directory. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+            `,
+          });
+
+          if (resendError) {
+            console.error("[RESEND ERROR]", resendError);
+          } else {
+            console.log(`[RESEND SUCCESS] Sent OTP to ${email}`);
+          }
+        } catch (emailErr) {
+          console.error("[RESEND EXCEPTION]", emailErr);
+        }
+      }
 
       return new Response(
         JSON.stringify({ success: true, message: "Verification OTP generated and stored." }),

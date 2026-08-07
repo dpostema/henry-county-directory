@@ -5,6 +5,7 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/client";
+import { siteConfig } from "@/config/site";
 import {
   approveClaimAction,
   rejectClaimAction,
@@ -451,7 +452,7 @@ export default function AdminPage() {
               </div>
               <div>
                 <span className="font-heading font-black text-base tracking-tight text-slate-900 block leading-tight">
-                  Henry<span className="text-[#E8505B]">Directory</span>
+                  {siteConfig.name}
                 </span>
                 <span className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">
                   Admin Control Panel
@@ -572,7 +573,7 @@ export default function AdminPage() {
                   {NAV_ITEMS.find((n) => n.tab === activeTab)?.label}
                 </h1>
                 <p className="text-xs text-slate-400 font-medium mt-0.5">
-                  Henry County Directory — Internal Control Panel
+                  {siteConfig.name} — Internal Control Panel
                 </p>
               </div>
               <button

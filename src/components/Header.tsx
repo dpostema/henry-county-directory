@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 import { User, LogOut, Menu, X } from "lucide-react";
 import { logout } from "@/app/auth/actions";
 import { User as SupabaseUser } from "@supabase/supabase-js";
+import { siteConfig } from "@/config/site";
 
 export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
@@ -55,13 +56,13 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
             <Link href="/" className="flex items-center space-x-1.5 group">
               <Image 
                 src="/logo.svg" 
-                alt="Henry County Directory Logo" 
+                alt={`${siteConfig.name} Logo`} 
                 width={28} 
                 height={28} 
                 className="object-contain transition-transform group-hover:scale-105" 
               />
               <span className="font-heading font-black text-lg text-brandText-dark tracking-tight group-hover:text-brandRed transition-colors">
-                Henry<span className="text-brandRed">County</span>Directory
+                {siteConfig.name}
               </span>
             </Link>
           </div>

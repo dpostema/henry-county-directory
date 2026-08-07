@@ -11,6 +11,7 @@ import { isBusinessOpenNow } from "@/services/search";
 import { toggleFavoriteAction, checkFavoriteStatus, createBookingAction } from "@/app/listings/actions";
 import { hasFeatureAccess } from "@/utils/featureGate";
 import { getEntitlements } from "@/utils/entitlements";
+import Map from "@/components/Map";
 
 interface ListingDetailClientProps {
   business: any;
@@ -34,7 +35,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
       history.unshift({
         name: business.name,
         slug: business.slug,
-        cover_image_url: business.cover_image_url,
+        cover_image_url: business.cover_image_url || business.media?.[0]?.url || null,
       });
       // Keep only last 10
       if (history.length > 10) history = history.slice(0, 10);
@@ -333,10 +334,12 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
               Location & Map
             </h2>
             <div className="aspect-[16/6] bg-slate-100 rounded-btn border border-brandBorder-light relative overflow-hidden flex items-center justify-center mb-3">
-              <div className="absolute inset-0 opacity-40 bg-[radial-gradient(#6c757d_1px,transparent_1px)] [background-size:16px_16px]"></div>
-              <div className="z-10 bg-brandBg-card p-4 rounded-xl shadow-md border border-brandBorder-light text-center max-w-xs">
-                <MapPin className="h-6 w-6 text-brandRed mx-auto mb-2" />
-                <p className="text-xs font-bold text-brandText-dark">{business.address}</p>
+              <div className="absolute inset-0 z-0">
+                <Map 
+                  latitude={Number(business.latitude)} 
+                  longitude={Number(business.longitude)} 
+                  popupText={business.name}
+                />
               </div>
             </div>
             <p className="text-xs text-brandText-light flex items-center space-x-1 justify-center mt-2">

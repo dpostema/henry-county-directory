@@ -13,6 +13,8 @@ interface PageProps {
   }>;
 }
 
+import { siteConfig } from "@/config/site";
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
@@ -24,15 +26,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (article) {
     return {
-      title: `${article.title} | Henry County Blog`,
-      description: article.excerpt || "Read this article on t+*-he Henry County Directory.",
+      title: `${article.title} | ${siteConfig.name} Blog`,
+      description: article.excerpt || `Read this article on ${siteConfig.name}.`,
     };
   }
 
   const mockTitle = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
   return {
-    title: `${mockTitle} | Henry County Blog`,
-    description: "Read this article on the Henry County Directory.",
+    title: `${mockTitle} | ${siteConfig.name} Blog`,
+    description: `Read this article on ${siteConfig.name}.`,
   };
 }
 

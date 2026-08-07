@@ -6,8 +6,7 @@ import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 
 import { Metadata } from "next";
-
-
+import { siteConfig } from "@/config/site";
 
 interface PageProps {
   params: Promise<{
@@ -17,12 +16,11 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: city } = await supabase.from("cities").select("name").eq("slug", slug).maybeSingle();
-  const cityName = city?.name || `${slug.charAt(0).toUpperCase()}${slug.slice(1)}`;
+  const cityName = slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+
   return {
-    title: `Best Businesses in ${cityName}, GA | Henry County Directory`,
-    description: `Browse top-rated businesses, restaurants, and local services in ${cityName}, Georgia.`,
+    title: `Best Businesses in ${cityName}, GA | ${siteConfig.name}`,
+    description: `Discover the top-rated local businesses, restaurants, hotels, and services in ${cityName}, Georgia. Read reviews and find what you need.`,
   };
 }
 

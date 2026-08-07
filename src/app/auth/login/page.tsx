@@ -7,6 +7,7 @@ import { login } from "../actions";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -60,13 +61,13 @@ export default function LoginPage() {
                 <Link href="/" className="flex items-center gap-2 group">
                   <Image 
                     src="/logo.svg" 
-                    alt="Henry County Directory Logo" 
+                    alt={`${siteConfig.name} Logo`} 
                     width={32} 
                     height={32} 
                     className="object-contain transition-transform group-hover:scale-105" 
                   />
                   <h1 className="text-xl font-black font-heading tracking-tight text-slate-900">
-                    Henry<span className="text-[#E8505B]">County</span>Directory
+                    {siteConfig.name}
                   </h1>
                 </Link>
               </div>
@@ -181,7 +182,7 @@ export default function LoginPage() {
             <div className="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto shadow-xl p-3">
               <Image 
                 src="/logo.svg" 
-                alt="Henry County Directory Logo" 
+                alt={`${siteConfig.name} Logo`} 
                 width={52} 
                 height={52} 
                 className="object-contain" 
@@ -190,10 +191,10 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <h2 className="text-xl font-black font-heading tracking-tight text-white drop-shadow-sm">
-                Henry<span className="text-white/80">County</span>Directory
+                {siteConfig.name}
               </h2>
               <p className="text-xs text-white/80 font-light leading-relaxed">
-                Discover local businesses, manage your claimed directory profiles, interact with customer reviews, and grow your local presence in Henry County, Georgia.
+                Discover local businesses, manage your claimed directory profiles, interact with customer reviews, and grow your local presence.
               </p>
             </div>
 

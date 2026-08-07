@@ -1,3 +1,5 @@
+import { siteConfig } from "@/config/site";
+
 export function generateEmailHtml(title: string, contentHtml: string): string {
   const brandColor = "#E8505B";
   
@@ -90,7 +92,7 @@ export function generateEmailHtml(title: string, contentHtml: string): string {
       ${contentHtml}
     </div>
     <div class="footer">
-      &copy; ${new Date().getFullYear()} Henry County Directory. All rights reserved.
+      &copy; ${new Date().getFullYear()} ${siteConfig.name}. All rights reserved.
     </div>
   </div>
 </body>

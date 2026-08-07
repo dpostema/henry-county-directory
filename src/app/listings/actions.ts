@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { siteConfig } from "@/config/site";
 import { createClient } from "@/utils/supabase/server";
 import { generateEmailHtml } from "@/utils/email-template";
 
@@ -79,10 +80,10 @@ export async function optInDigestAction(email: string, categories: string[]) {
   const { sendEmail } = await import("@/utils/email");
   await sendEmail({
     to: email,
-    subject: "Welcome to the Henry County Digest!",
-    html: generateEmailHtml("Henry County Directory", `
+    subject: `Welcome to the ${siteConfig.name} Digest!`,
+    html: generateEmailHtml(siteConfig.name, `
       <h3>Thanks for subscribing!</h3>
-      <p>You will now receive weekly updates about the best local businesses, events, and promotions in Henry County right to your inbox.</p>
+      <p>You will now receive weekly updates about the best local businesses, events, and promotions in our community right to your inbox.</p>
       <p>Stay tuned for our next issue!</p>
     `)
   });
@@ -176,7 +177,7 @@ export async function createBookingAction(businessId: string, bookingTime: strin
     await sendEmail({
       to: business.email,
       subject: `New Appointment Request for ${business.name}`,
-      html: generateEmailHtml("Henry County Directory", `
+      html: generateEmailHtml(siteConfig.name, `
         <h3>You have a new appointment request!</h3>
         <p>A customer has requested to book an appointment with you.</p>
         <div class="box">

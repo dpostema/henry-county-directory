@@ -7,6 +7,7 @@ import { createClient } from "@/utils/supabase/server";
 import { callOpenAI } from "@/utils/ai";
 import { sendEmail } from "@/utils/email";
 import { generateEmailHtml } from "@/utils/email-template";
+import { siteConfig } from "@/config/site";
 export async function updateListingAction(formData: FormData) {
   const supabase = await createClient();
 
@@ -140,7 +141,7 @@ export async function replyToReviewAction(reviewId: string, replyText: string) {
     .eq("id", reviewId)
     .single();
 
-  if ((reviewInfo?.author as any)?.email) {
+  if (reviewInfo && (reviewInfo.author as any)?.email) {
     const businessName = (reviewInfo.business as any)?.name || "Local Business";
     const authorEmail = (reviewInfo.author as any).email;
     await sendEmail({
@@ -148,7 +149,7 @@ export async function replyToReviewAction(reviewId: string, replyText: string) {
       subject: `Reply to your review from ${businessName}`,
       html: generateEmailHtml(businessName, `
         <h3>${businessName} replied to your review!</h3>
-        <p>You recently left a review for ${businessName} on the Henry County Directory. The business owner has sent a response:</p>
+        <p>You recently left a review for ${businessName} on ${siteConfig.name}. The business owner has sent a response:</p>
         <div class="box">
           <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${replyText}</p>
         </div>
@@ -184,7 +185,7 @@ export async function answerQuestionAction(qnaId: string, answerText: string) {
     .eq("id", qnaId)
     .single();
 
-  if ((qnaInfo?.visitor as any)?.email) {
+  if (qnaInfo && (qnaInfo.visitor as any)?.email) {
     const businessName = (qnaInfo.business as any)?.name || "Local Business";
     const visitorEmail = (qnaInfo.visitor as any).email;
     await sendEmail({
@@ -192,7 +193,7 @@ export async function answerQuestionAction(qnaId: string, answerText: string) {
       subject: `${businessName} answered your question`,
       html: generateEmailHtml(businessName, `
         <h3>${businessName} answered your question!</h3>
-        <p>You recently asked a question to ${businessName} on the Henry County Directory. The business owner has sent a response:</p>
+        <p>You recently asked a question to ${businessName} on ${siteConfig.name}. The business owner has sent a response:</p>
         <div class="box">
           <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${answerText}</p>
         </div>
@@ -275,7 +276,7 @@ export async function updateBookingStatusAction(bookingId: string, status: "conf
     .eq("id", bookingId)
     .single();
 
-  if ((bookingInfo?.visitor as any)?.email) {
+  if (bookingInfo && (bookingInfo.visitor as any)?.email) {
     const businessName = (bookingInfo.business as any)?.name || "Local Business";
     const visitorEmail = (bookingInfo.visitor as any).email;
     const actionText = status === "confirmed" ? "confirmed" : "cancelled";
@@ -358,7 +359,7 @@ export async function replyToLeadMessageAction(leadId: string, replyText: string
       subject: `Reply from ${businessName}`,
       html: generateEmailHtml(businessName, `
         <h3>${businessName} replied to your message!</h3>
-        <p>You recently reached out via the Henry County Directory. The business owner has sent a response:</p>
+        <p>You recently reached out via ${siteConfig.name}. The business owner has sent a response:</p>
         <div class="box">
           <p style="white-space: pre-wrap; font-size: 15px; color: #334155;">${replyText}</p>
         </div>

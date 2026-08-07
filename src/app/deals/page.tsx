@@ -6,9 +6,11 @@ import { Tag, Calendar, ExternalLink } from "lucide-react";
 import CopyCodeButton from "./CopyCodeButton";
 import { Metadata } from "next";
 
+import { siteConfig } from "@/config/site";
+
 export const metadata: Metadata = {
-  title: "Local Deals & Coupons | Henry County Directory",
-  description: "Save big at your favorite Henry County dining, shopping, and service businesses with our exclusive local deals and coupons.",
+  title: `Local Deals & Coupons | ${siteConfig.name}`,
+  description: `Save big at your favorite dining, shopping, and service businesses with our exclusive local deals and coupons.`,
 };
 
 export const revalidate = 60; // Revalidate every 60 seconds

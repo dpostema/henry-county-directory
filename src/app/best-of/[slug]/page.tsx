@@ -6,6 +6,8 @@ import ListingCard from "@/components/ListingCard";
 import { Metadata } from "next";
 import { Award, ChevronRight } from "lucide-react";
 
+import { siteConfig } from "@/config/site";
+
 interface PageProps {
   params: Promise<{
     slug: string;
@@ -17,8 +19,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const listTitle = slug.split("-").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
 
   return {
-    title: `${listTitle} | Henry County Best-Of`,
-    description: `Discover the top-rated businesses for ${listTitle} in Henry County, carefully curated by local experts and reviews.`,
+    title: `Best ${listTitle} in ${siteConfig.name} | Top Rated`,
+    description: `Discover the top-rated businesses for ${listTitle} in ${siteConfig.name}, GA based on verified customer reviews.`,
   };
 }
 
@@ -58,14 +60,14 @@ export default async function BestOfPage({ params }: PageProps) {
     "@context": "https://schema.org",
     "@type": "ItemList",
     "name": listTitle,
-    "description": `Top-rated businesses for ${listTitle} in Henry County.`,
+    "description": `Top-rated businesses for ${listTitle} in ${siteConfig.name}.`,
     "itemListElement": listings.map((business, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "item": {
         "@type": "LocalBusiness",
         "name": business.name,
-        "url": `https://henrycountydirectory.com/listings/${business.slug}`,
+        "url": `${siteConfig.url}/listings/${business.slug}`,
         "image": business.media?.[0]?.url || "",
         "address": {
           "@type": "PostalAddress",

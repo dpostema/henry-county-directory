@@ -6,9 +6,11 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { BookOpen } from "lucide-react";
 
+import { siteConfig } from "@/config/site";
+
 export const metadata: Metadata = {
-  title: "Blog & Local Guides | Henry County Directory",
-  description: "Read the latest news, local guides, and stories from Henry County businesses and residents.",
+  title: `Blog & Local Guides | ${siteConfig.name}`,
+  description: "Read the latest news, local guides, and stories from local businesses and residents.",
 };
 
 export default async function BlogIndexPage() {

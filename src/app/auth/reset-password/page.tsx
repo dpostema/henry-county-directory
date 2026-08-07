@@ -7,6 +7,7 @@ import { requestPasswordReset, updatePassword } from "../actions";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, ArrowRight } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function ResetPasswordPage() {
   const [isUpdateMode, setIsUpdateMode] = useState(false);
@@ -93,13 +94,13 @@ export default function ResetPasswordPage() {
                 <Link href="/" className="flex items-center gap-2 group">
                   <Image 
                     src="/logo.svg" 
-                    alt="Henry County Directory Logo" 
+                    alt={`${siteConfig.name} Logo`} 
                     width={32} 
                     height={32} 
                     className="object-contain transition-transform group-hover:scale-105" 
                   />
                   <h1 className="text-xl font-black font-heading tracking-tight text-slate-900">
-                    Henry<span className="text-[#E8505B]">County</span>Directory
+                    {siteConfig.name}
                   </h1>
                 </Link>
               </div>
@@ -196,7 +197,7 @@ export default function ResetPasswordPage() {
             <div className="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto shadow-xl p-3">
               <Image 
                 src="/logo.svg" 
-                alt="Henry County Directory Logo" 
+                alt={`${siteConfig.name} Logo`} 
                 width={52} 
                 height={52} 
                 className="object-contain" 
@@ -205,10 +206,10 @@ export default function ResetPasswordPage() {
 
             <div className="space-y-2">
               <h2 className="text-xl font-black font-heading tracking-tight text-white drop-shadow-sm">
-                Henry<span className="text-white/80">County</span>Directory
+                {siteConfig.name}
               </h2>
               <p className="text-xs text-white/80 font-light leading-relaxed">
-                Securely recover access to your Henry County Directory account and listings.
+                Securely recover access to your {siteConfig.name} account and listings.
               </p>
             </div>
 

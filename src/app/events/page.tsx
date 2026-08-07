@@ -5,8 +5,10 @@ import Footer from "@/components/Footer";
 import { Calendar, MapPin, Building2, ExternalLink } from "lucide-react";
 import { Metadata } from "next";
 
+import { siteConfig } from "@/config/site";
+
 export const metadata: Metadata = {
-  title: "Local Events | Henry County Directory",
+  title: `Local Events | ${siteConfig.name}`,
   description: "Check out local happenings, live music sessions, sales events, and social gatherings.",
 };
 

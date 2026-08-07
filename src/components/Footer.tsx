@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { optInDigestAction } from "@/app/listings/actions";
+import { siteConfig } from "@/config/site";
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -32,13 +33,13 @@ export default function Footer() {
             <Link href="/" className="flex items-center space-x-1.5 group">
               <Image 
                 src="/logo.svg" 
-                alt="Henry County Directory Logo" 
+                alt={`${siteConfig.name} Logo`} 
                 width={32} 
                 height={32} 
                 className="object-contain transition-transform group-hover:scale-105" 
               />
               <span className="text-lg font-extrabold text-brandText-dark tracking-tight font-heading group-hover:text-brandRed transition-colors">
-                Henry<span className="text-brandRed">County</span>Directory
+                {siteConfig.name}
               </span>
             </Link>
             <p className="text-sm text-brandText-light font-light leading-relaxed">
@@ -148,7 +149,7 @@ export default function Footer() {
         {/* Divider */}
         <div className="border-t border-brandBorder-light pt-8 flex flex-col md:flex-row items-center justify-between">
           <p className="text-[11px] font-bold text-brandText-light mb-4 md:mb-0 uppercase tracking-wider">
-            &copy; {new Date().getFullYear()} HenryCountyDirectory. All Rights Reserved.
+            &copy; {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
           </p>
 
           {/* Social Icons */}

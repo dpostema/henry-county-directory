@@ -3,6 +3,8 @@ import { Outfit, Inter, Geist } from "next/font/google";
 import "./globals.css";
 import PWA from "@/components/PWA";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
+import CookieConsent from "@/components/CookieConsent";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -20,9 +22,11 @@ const inter = Inter({
   display: "swap",
 });
 
+import { siteConfig } from "@/config/site";
+
 export const metadata: Metadata = {
-  title: "Henry County Directory — Discover Your Amazing City",
-  description: "Find great places to stay, eat, shop, or visit in Henry County from local experts. Discover restaurants, hotels, jobs, services, and attractions.",
+  title: `${siteConfig.name} — ${siteConfig.description}`,
+  description: siteConfig.description,
   manifest: "/manifest.json",
 };
 
@@ -43,6 +47,8 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-brandBg-app text-brandText-medium font-body">
         <PWA />
         {children}
+        <Analytics />
+        <CookieConsent />
       </body>
     </html>
   );

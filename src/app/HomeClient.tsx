@@ -336,62 +336,9 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          CLIENTS REVIEW / TESTIMONIALS
-      ═══════════════════════════════════════════════════════════════ */}
-      <section className="bg-brandBg-app py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl font-heading tracking-tight mb-2">
-              <span className="font-extrabold text-brandText-dark">Clients</span>{" "}
-              <span className="font-normal text-brandText-medium">Review</span>
-            </h2>
-            <p className="text-sm text-brandText-light font-light">
-              What visitors say about local shops in Henry County
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-            {[
-              {
-                name: "James Wilson",
-                role: "Local Business Owner",
-                text: "HenryCountyDirectory has been a game-changer for my restaurant. Since listing, we've seen a 40% increase in foot traffic. The platform is intuitive and the support team is excellent."
-              },
-              {
-                name: "Sarah Mitchell",
-                role: "Community Organizer",
-                text: "I love how easy it is to discover new businesses in the area. The reviews are genuine and the search filters make it simple to find exactly what you need. Highly recommend!"
-              }
-            ].map((t) => (
-              <div key={t.name} className="bg-white p-6 rounded-xl border border-brandBorder-light shadow-sm relative">
-                <span className="absolute top-4 right-6 text-5xl font-serif text-brandRed/10 select-none">&ldquo;</span>
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="h-11 w-11 rounded-full bg-slate-100 overflow-hidden flex-shrink-0">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`https://api.dicebear.com/7.x/initials/svg?seed=${t.name}`}
-                      alt={t.name}
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-brandText-dark font-heading">{t.name}</h4>
-                    <span className="text-[10px] text-brandText-light uppercase font-bold tracking-wider">{t.role}</span>
-                  </div>
-                </div>
-                <p className="text-sm text-brandText-medium font-light leading-relaxed italic">
-                  &ldquo;{t.text}&rdquo;
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
           SOME TIPS & ARTICLES
       ═══════════════════════════════════════════════════════════════ */}
-      <section className="bg-white py-16" id="articles">
+      <section className="bg-brandBg-app py-16" id="articles">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-8">
             <h2 className="text-2xl font-heading tracking-tight">

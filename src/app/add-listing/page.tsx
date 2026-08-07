@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AddListingForm from "./AddListingForm";
-
+import { siteConfig } from "@/config/site";
 export default async function AddListingPage() {
   const supabase = await createClient();
 
@@ -32,7 +32,7 @@ export default async function AddListingPage() {
           <div className="mb-8 border-b border-brandBorder-light pb-4">
             <h1 className="text-2xl font-black text-brandText-dark font-heading">Add a New Listing</h1>
             <p className="text-sm text-brandText-light font-light mt-1">
-              Create a new business profile in Henry County Directory.
+              Create a new business profile in {siteConfig.name}.
             </p>
           </div>
           

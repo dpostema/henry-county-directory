@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { siteConfig } from "@/config/site";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -212,20 +213,41 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {history.map((item, idx) => (
-                  <Link key={idx} href={`/listings/${item.slug}`} className="group flex items-center bg-brandBg-card border border-brandBorder-light rounded-xl overflow-hidden hover:border-brandRed hover:shadow-sm transition-all p-3 space-x-3">
-                     <div className="relative h-12 w-12 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0">
-                        {item.cover_image_url ? (
-                          <Image src={item.cover_image_url} alt={item.name} fill className="object-cover" sizes="48px" />
-                        ) : (
-                          <div className="h-full w-full flex items-center justify-center"><Building2 className="h-5 w-5 text-brandText-light opacity-30"/></div>
-                        )}
-                     </div>
-                     <div className="flex-grow min-w-0">
-                       <h4 className="font-bold text-sm text-brandText-dark truncate group-hover:text-brandRed transition-colors">{item.name}</h4>
-                       <p className="text-[10px] text-brandText-light truncate">Viewed recently</p>
-                     </div>
+                  <Link
+                    key={idx}
+                    href={`/listings/${item.slug}`}
+                    className="group flex flex-col bg-brandBg-card border border-brandBorder-light rounded-xl overflow-hidden hover:border-brandRed hover:shadow-md transition-all duration-200"
+                  >
+                    {/* Thumbnail */}
+                    <div className="relative h-28 w-full overflow-hidden bg-slate-100 flex-shrink-0">
+                      {item.cover_image_url ? (
+                        <Image
+                          src={item.cover_image_url}
+                          alt={item.name}
+                          fill
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                        />
+                      ) : (
+                        /* Fallback: generated avatar based on business name */
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(item.name)}&backgroundColor=e8505b&fontSize=36&fontWeight=700&textColor=ffffff`}
+                          alt={item.name}
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    {/* Info */}
+                    <div className="p-3">
+                      <h4 className="font-bold text-xs text-brandText-dark truncate group-hover:text-brandRed transition-colors leading-tight">
+                        {item.name}
+                      </h4>
+                      <p className="text-[10px] text-brandText-light mt-0.5">Viewed recently</p>
+                    </div>
                   </Link>
                 ))}
               </div>
@@ -299,7 +321,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
           <div className="w-7 h-7 rounded-lg bg-[#E8505B] text-white flex items-center justify-center">
             <MapPin className="h-4 w-4" />
           </div>
-          <span>Henry<span className="text-[#E8505B]">Directory</span></span>
+          <span>{siteConfig.name}</span>
         </div>
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 -mr-2 text-slate-700 rounded-lg hover:bg-slate-50">
           {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -328,7 +350,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
               </Link>
               <div>
                 <span className="font-heading font-black text-base tracking-tight text-slate-900 block leading-tight">
-                  Henry<span className="text-[#E8505B]">Directory</span>
+                  {siteConfig.name}
                 </span>
                 <span className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">
                   Member Portal

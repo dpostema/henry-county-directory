@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ListingDetailClient from "./ListingDetailClient";
 import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 
 interface PageProps {
   params: Promise<{
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (business) {
     return {
-      title: `${business.name} in ${(business.city as any)?.name || 'Henry County'} | Directory`,
+      title: `${business.name} in ${(business.city as any)?.name || siteConfig.name} | Directory`,
       description: business.description?.substring(0, 160) || `View details, reviews, and contact info for ${business.name}.`,
     };
   }
@@ -83,7 +84,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
     "@type": "LocalBusiness",
     "name": business.name,
     "image": business.media?.[0]?.url || "",
-    "url": `https://henrycountydirectory.com/listings/${business.slug}`,
+    "url": `${siteConfig.url}/listings/${business.slug}`,
     "telephone": business.phone,
     "address": {
       "@type": "PostalAddress",

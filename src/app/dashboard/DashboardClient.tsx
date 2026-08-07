@@ -9,6 +9,7 @@ import { createClient } from "@/utils/supabase/client";
 import { logout } from "../auth/actions";
 import { hasFeatureAccess } from "@/utils/featureGate";
 import { getEntitlements, type PlanTier } from "@/utils/entitlements";
+import { siteConfig } from "@/config/site";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
@@ -587,7 +588,7 @@ export default function DashboardClient({
               </Link>
               <div>
                 <span className="font-heading font-black text-base tracking-tight text-slate-900 block leading-tight">
-                  Henry<span className="text-[#E8505B]">Directory</span>
+                  {siteConfig.name}
                 </span>
                 <span className="text-[10px] text-slate-400 font-semibold tracking-wider uppercase block">
                   Business Portal
@@ -1863,110 +1864,7 @@ export default function DashboardClient({
             </div>
           )}
 
-          {activeTab === "marketing" && (
-            <div className="space-y-8 text-left font-sans">
-              <div className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
-                <div className="border-b border-brandBorder-light pb-2">
-                  <h3 className="text-sm font-bold text-brandText-dark font-heading">
-                    QR Code Generator
-                  </h3>
-                </div>
 
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-                  {typeof window !== "undefined" && (() => {
-                    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(window.location.origin + "/listings/" + activeBusiness?.slug)}`;
-                    return (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={qrUrl}
-                        alt="Listing QR Code"
-                        className="w-44 h-44 bg-white border border-brandBorder-light p-2.5 rounded shadow-sm flex-shrink-0"
-                      />
-                    );
-                  })()}
-
-                  <div className="space-y-3 text-xs leading-relaxed font-light">
-                    <p className="text-brandText-medium font-bold">
-                      Direct Review Access Code
-                    </p>
-                    <p className="text-brandText-light">
-                      Print and place this custom QR code on tables, registers, window decals, or receipts. Customers scan it with their phone cameras to instantly access your listing profile and submit reviews.
-                    </p>
-                    {typeof window !== "undefined" && (
-                      <a
-                        href={`https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=${encodeURIComponent(
-                          window.location.origin + "/listings/" + activeBusiness?.slug
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs px-3.5 py-2 rounded shadow-sm transition"
-                      >
-                        Download High-Res QR
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
-                <div className="border-b border-brandBorder-light pb-2">
-                  <h3 className="text-sm font-bold text-brandText-dark font-heading">
-                    Embeddable Review Widget
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs leading-relaxed">
-                  <div className="space-y-3">
-                    <p className="text-brandText-light font-light">
-                      Promote your Henry County ratings directly on your personal business website! Copy the HTML iframe snippet code below and paste it into your CMS editor or source code.
-                    </p>
-
-                    <textarea
-                      readOnly
-                      rows={3}
-                      value={
-                        typeof window !== "undefined"
-                          ? `<iframe src="${window.location.origin}/listings/${activeBusiness?.slug}/widget" width="320" height="140" frameborder="0" style="border:none; overflow:hidden;"></iframe>`
-                          : ""
-                      }
-                      onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-                      className="w-full p-2.5 bg-slate-50 font-mono text-[10px] border border-brandBorder-light rounded-btn select-all focus:outline-none"
-                    />
-
-                    <button
-                      onClick={() => {
-                        if (typeof window !== "undefined") {
-                          const widgetCode = `<iframe src="${window.location.origin}/listings/${activeBusiness?.slug}/widget" width="320" height="140" frameborder="0" style="border:none; overflow:hidden;"></iframe>`;
-                          navigator.clipboard.writeText(widgetCode);
-                          alert("Widget code copied to clipboard!");
-                        }
-                      }}
-                      className="bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs px-3 py-1.5 rounded-btn shadow-sm transition"
-                    >
-                      Copy Snippet
-                    </button>
-                  </div>
-
-                  <div className="space-y-2 text-center bg-slate-50 p-4 rounded-xl border border-brandBorder-light flex flex-col justify-center items-center flex-shrink-0">
-                    <span className="text-[10px] font-bold text-brandText-light uppercase tracking-wider block mb-1">
-                      Widget Preview
-                    </span>
-
-                    {/* Active live iframe preview */}
-                    {typeof window !== "undefined" && activeBusiness && (
-                      <iframe
-                        src={`/listings/${activeBusiness.slug}/widget`}
-                        width="320"
-                        height="140"
-                        className="bg-white border border-brandBorder-light overflow-hidden rounded-lg shadow-sm"
-                        style={{ border: "none" }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
 
           {activeTab === "marketing" && (
             <div className="space-y-8 text-left font-sans">
@@ -2013,63 +1911,7 @@ export default function DashboardClient({
                 </div>
               </div>
 
-              <div className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
-                <div className="border-b border-brandBorder-light pb-2">
-                  <h3 className="text-sm font-bold text-brandText-dark font-heading">
-                    Embeddable Review Widget
-                  </h3>
-                </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs leading-relaxed">
-                  <div className="space-y-3">
-                    <p className="text-brandText-light font-light">
-                      Promote your Henry County ratings directly on your personal business website! Copy the HTML iframe snippet code below and paste it into your CMS editor or source code.
-                    </p>
-
-                    <textarea
-                      readOnly
-                      rows={3}
-                      value={
-                        typeof window !== "undefined"
-                          ? `<iframe src="${window.location.origin}/listings/${activeBusiness?.slug}/widget" width="320" height="140" frameborder="0" style="border:none; overflow:hidden;"></iframe>`
-                          : ""
-                      }
-                      onClick={(e) => (e.target as HTMLTextAreaElement).select()}
-                      className="w-full p-2.5 bg-slate-50 font-mono text-[10px] border border-brandBorder-light rounded-btn select-all focus:outline-none"
-                    />
-
-                    <button
-                      onClick={() => {
-                        if (typeof window !== "undefined") {
-                          const widgetCode = `<iframe src="${window.location.origin}/listings/${activeBusiness?.slug}/widget" width="320" height="140" frameborder="0" style="border:none; overflow:hidden;"></iframe>`;
-                          navigator.clipboard.writeText(widgetCode);
-                          alert("Widget code copied to clipboard!");
-                        }
-                      }}
-                      className="bg-slate-950 hover:bg-slate-900 text-white font-bold text-xs px-3 py-1.5 rounded-btn shadow-sm transition"
-                    >
-                      Copy Snippet
-                    </button>
-                  </div>
-
-                  <div className="space-y-2 text-center bg-slate-50 p-4 rounded-xl border border-brandBorder-light flex flex-col justify-center items-center flex-shrink-0">
-                    <span className="text-[10px] font-bold text-brandText-light uppercase tracking-wider block mb-1">
-                      Widget Preview
-                    </span>
-
-                    {/* Active live iframe preview */}
-                    {typeof window !== "undefined" && activeBusiness && (
-                      <iframe
-                        src={`/listings/${activeBusiness.slug}/widget`}
-                        width="320"
-                        height="140"
-                        className="bg-white border border-brandBorder-light overflow-hidden rounded-lg shadow-sm"
-                        style={{ border: "none" }}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
             </div>
           )}
 
@@ -2221,64 +2063,7 @@ export default function DashboardClient({
                 </div>
               </section>
 
-              {/* Referral Widget */}
-              <section className="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-6">
-                <h3 className="text-base font-bold text-slate-900 font-heading flex items-center border-b border-slate-100 pb-3">
-                  <Gift className="h-5 w-5 text-[#E8505B] mr-2" />
-                  <span>Refer Another Business (Earn Rewards)</span>
-                </h3>
-                <p className="text-xs text-slate-500 font-light leading-relaxed">
-                  Invite your business friends to claim their listings. Get rewarded with free subscription upgrades or add-ons when they subscribe to a paid tier.
-                </p>
 
-                <form onSubmit={handleSendReferral} className="flex gap-3">
-                  <input
-                    type="email"
-                    placeholder="Enter email to refer..."
-                    required
-                    value={referralEmail}
-                    onChange={(e) => setReferralEmail(e.target.value)}
-                    className="w-full p-2.5 text-xs border border-slate-200 rounded-xl"
-                  />
-                  <button
-                    type="submit"
-                    disabled={referralLoading}
-                    className="bg-[#E8505B] hover:bg-[#CF3641] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-sm transition disabled:opacity-50 flex-shrink-0"
-                  >
-                    {referralLoading ? "Sending..." : "Send Invitation"}
-                  </button>
-                </form>
-
-                {/* Sent Referrals list */}
-                <div className="space-y-3 pt-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                    Sent Referrals ({referrals.length})
-                  </span>
-                  
-                  {referrals.length === 0 ? (
-                    <p className="text-xs text-slate-400 italic font-light">No referrals sent yet.</p>
-                  ) : (
-                    <div className="divide-y divide-slate-100 max-h-48 overflow-y-auto border border-slate-100 p-2 rounded-xl bg-slate-50">
-                      {referrals.map((ref) => (
-                        <div key={ref.id} className="flex justify-between items-center py-2 text-xs">
-                          <span className="font-semibold text-slate-800">{ref.referred_email}</span>
-                          <span
-                            className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded ${
-                              ref.status === "subscribed"
-                                ? "bg-emerald-50 text-emerald-800"
-                                : ref.status === "joined"
-                                ? "bg-blue-50 text-blue-800"
-                                : "bg-slate-100 text-slate-800"
-                            }`}
-                          >
-                            {ref.status}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </section>
             </div>
           )}
         </main>

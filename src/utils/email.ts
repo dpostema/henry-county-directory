@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { siteConfig } from "@/config/site";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
@@ -17,7 +18,7 @@ export async function sendEmail({ to, subject, html }: SendEmailParams) {
   }
 
   try {
-    const fromEmail = process.env.RESEND_DOMAIN_NAME?.trim() || "Henry County Directory <onboarding@resend.dev>";
+    const fromEmail = process.env.RESEND_DOMAIN_NAME?.trim() || `${siteConfig.name} <onboarding@resend.dev>`;
     
     const { data, error } = await resend.emails.send({
       from: fromEmail,

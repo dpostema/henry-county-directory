@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { Star, CircleCheck, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { siteConfig } from "@/config/site";
 
 interface WidgetPageProps {
   params: Promise<{ slug: string }>;
@@ -66,11 +67,11 @@ export default async function ListingWidgetPage({ params }: WidgetPageProps) {
           </div>
 
           <p className="text-[9px] text-slate-400 font-light leading-none">
-            Henry County Directory
+            {siteConfig.name}
           </p>
 
           <Link
-            href={`/listings/${business.slug}`}
+            href={`${siteConfig.url}/listings/${business.slug}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center text-[10px] font-bold text-red-500 hover:text-red-600 transition-colors pt-1"

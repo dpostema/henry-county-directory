@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { createClient } from '@/utils/supabase/server';
+import { siteConfig } from "@/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://henrycountydirectory.com';
+  const baseUrl = siteConfig.url;
   const supabase = await createClient();
 
   // Static routes

@@ -1,80 +1,98 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any, react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import Link from "next/link";
-import { createClient } from "@/utils/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Scale, Trash, Star, Phone, Globe, MapPin, ExternalLink } from "lucide-react";
+import { fetchCompareBusinesses } from "./actions";
 
 export default function CompareListingsPage() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
   const [businesses, setBusinesses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [idsLoaded, setIdsLoaded] = useState(false);
 
-  const supabase = createClient();
-
+  // Step 1: Read IDs from localStorage (client-side only)
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    try {
       const saved = localStorage.getItem("compare_listings");
       if (saved) {
-        try {
-          const ids = JSON.parse(saved);
-          if (Array.isArray(ids)) {
-            setCompareIds(ids);
+        const ids = JSON.parse(saved);
+        if (Array.isArray(ids)) {
+          // Filter out any corrupted/non-UUID entries
+          const validIds = ids.filter((id: unknown) => typeof id === "string" && UUID_RE.test(id));
+          // Clean up localStorage if there were invalid entries
+          if (validIds.length !== ids.length) {
+            localStorage.setItem("compare_listings", JSON.stringify(validIds));
           }
-        } catch (err) {
-          console.log(err);
+          if (validIds.length > 0) {
+            setCompareIds(validIds);
+          }
         }
       }
-    }, 0);
-    return () => clearTimeout(timer);
+    } catch (err) {
+      console.error("[Compare] Error reading localStorage:", err);
+      localStorage.removeItem("compare_listings");
+    }
+    setIdsLoaded(true);
   }, []);
 
+  // Step 2: Fetch businesses from server action when IDs are loaded
   useEffect(() => {
-    async function loadCompared() {
-      if (compareIds.length === 0) {
-        setBusinesses([]);
-        setLoading(false);
-        return;
-      }
-      setLoading(true);
+    if (!idsLoaded) return;
 
-      const { data, error } = await supabase
-        .from("businesses")
-        .select(`
-          *,
-          category:categories(name),
-          city:cities(name)
-        `)
-        .in("id", compareIds);
-
+    if (compareIds.length === 0) {
+      setBusinesses([]);
       setLoading(false);
-      if (!error && data) {
-        setBusinesses(data);
-      }
+      return;
     }
+
+    async function loadCompared() {
+      setLoading(true);
+      try {
+        const result = await fetchCompareBusinesses(compareIds);
+        if (result.error) {
+          console.error("[Compare] Server error:", result.error);
+        }
+        setBusinesses(result.data || []);
+      } catch (err) {
+        console.error("[Compare] Fetch error:", err);
+        setBusinesses([]);
+      }
+      setLoading(false);
+    }
+
     loadCompared();
-  }, [compareIds]);
+  }, [compareIds, idsLoaded]);
 
-  const handleRemove = (id: string) => {
-    const updated = compareIds.filter((item) => item !== id);
-    setCompareIds(updated);
-    localStorage.setItem("compare_listings", JSON.stringify(updated));
-  };
+  const handleRemove = useCallback((id: string) => {
+    setCompareIds((prev) => {
+      const updated = prev.filter((item) => item !== id);
+      localStorage.setItem("compare_listings", JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
 
-  const handleClearAll = () => {
+  const handleClearAll = useCallback(() => {
     setCompareIds([]);
+    setBusinesses([]);
     localStorage.removeItem("compare_listings");
-  };
+  }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-brandBg-app flex flex-col justify-between">
         <Header />
-        <div className="text-center py-16 text-sm text-brandText-light">Loading comparison data...</div>
+        <div className="flex-grow flex items-center justify-center">
+          <div className="text-center space-y-3">
+            <Scale className="h-8 w-8 text-brandText-light mx-auto animate-pulse" />
+            <p className="text-sm text-brandText-light">Loading comparison data...</p>
+          </div>
+        </div>
         <Footer />
       </div>
     );
@@ -175,9 +193,9 @@ export default function CompareListingsPage() {
                       <td key={bus.id} className="p-4">
                         <div className="flex items-center text-badge-rating font-bold space-x-1">
                           <Star className="h-4 w-4 fill-current" />
-                          <span>{bus.rating_avg.toFixed(1)}</span>
+                          <span>{(bus.rating_avg || 0).toFixed(1)}</span>
                           <span className="text-[10px] text-brandText-light font-light">
-                            ({bus.review_count} reviews)
+                            ({bus.review_count || 0} reviews)
                           </span>
                         </div>
                       </td>

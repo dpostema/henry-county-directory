@@ -143,15 +143,13 @@ export default function ListingCard({ business }: ListingCardProps) {
           )}
         </div>
 
-        {/* Rating + Price + Category */}
+        {/* Rating + Category */}
         <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-[11px] text-brandText-light mb-2">
           <div className="flex items-center text-badge-rating space-x-0.5">
             <Star className="h-3 w-3 fill-current" />
             <span className="font-bold text-brandText-dark">{(business.rating_avg || 0).toFixed(1)}</span>
             <span>Rating</span>
           </div>
-          <span className="text-brandBorder-light">|</span>
-          <span className="font-medium">From <span className="text-brandText-dark font-bold">${((business.rating_avg || 3) * 10 + 10).toFixed(2)}</span></span>
           <span className="text-brandBorder-light">|</span>
           <span className="bg-brandRed-muted text-brandRed font-bold px-1.5 py-0.5 rounded text-[10px]">
             {business.category?.name || "Directory"}

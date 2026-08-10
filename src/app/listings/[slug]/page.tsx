@@ -103,7 +103,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col">
-      <Header />
+      <Header sticky={false} />
       <main className="flex-grow">
         <ListingDetailClient 
           business={business} 

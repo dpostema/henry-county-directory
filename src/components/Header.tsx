@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { User, LogOut, Menu, X } from "lucide-react";
+import { User, LogOut, Menu, X, ChevronDown, LayoutDashboard } from "lucide-react";
 import { logout } from "@/app/auth/actions";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { siteConfig } from "@/config/site";
@@ -15,6 +15,8 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const profileDropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const supabase = useMemo(() => createClient(), []);
 
@@ -41,6 +43,16 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
     const handleScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target as Node)) {
+        setProfileDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -97,23 +109,44 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
             <div className="w-px h-5 bg-brandBorder-light mx-2"></div>
 
             {user ? (
-              <>
-                <Link
-                  href="/dashboard"
-                  className="flex items-center space-x-1 px-3 py-2 text-xs font-bold text-brandText-medium hover:text-brandRed transition-colors tracking-wider uppercase"
-                >
-                  <User className="h-3.5 w-3.5" />
-                  <span>Dashboard</span>
-                </Link>
+              <div className="relative ml-1 flex items-center" ref={profileDropdownRef}>
                 <button
-                  type="button"
-                  onClick={() => setShowLogoutModal(true)}
-                  className="flex items-center space-x-1 px-3 py-2 text-xs font-bold text-brandText-medium hover:text-brandRed transition-colors tracking-wider uppercase"
+                  onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                  className="flex items-center space-x-1 focus:outline-none"
                 >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span>Log out</span>
+                  <div className="h-8 w-8 rounded-full bg-slate-100 text-brandText-dark flex items-center justify-center font-bold text-sm border border-brandBorder-light shadow-sm hover:bg-slate-200 transition-colors">
+                    {user.email ? user.email.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                  </div>
+                  <ChevronDown className="h-3.5 w-3.5 text-brandText-light" />
                 </button>
-              </>
+
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-brandBorder-light rounded-xl shadow-lg py-1.5 z-50 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                    <div className="px-4 py-2 border-b border-brandBorder-light mb-1">
+                      <p className="text-xs text-brandText-light font-medium truncate">{user.email}</p>
+                    </div>
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setProfileDropdownOpen(false)}
+                      className="flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-brandText-dark hover:bg-slate-50 transition-colors"
+                    >
+                      <LayoutDashboard className="h-4 w-4 text-brandText-light" />
+                      <span>Dashboard</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileDropdownOpen(false);
+                        setShowLogoutModal(true);
+                      }}
+                      className="w-full flex items-center space-x-2 px-4 py-2 text-sm font-semibold text-brandRed hover:bg-red-50 transition-colors text-left"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Log out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <Link
                 href="/auth/login"

@@ -476,8 +476,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
 
           {/* Q&A Section */}
           <section className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm">
-            <h2 className="text-xl font-bold text-brandText-dark font-heading mb-6 flex items-center space-x-2">
-              <MessageSquare className="h-5 w-5 text-brandRed" />
+            <h2 className="text-xl font-bold text-brandText-dark font-heading mb-6">
               <span>Questions & Answers ({dbQnas.length})</span>
             </h2>
 
@@ -691,8 +690,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
           {/* Status & Contact details */}
           <section className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-brandBorder-light pb-4">
-              <span className="text-sm font-semibold text-brandText-dark flex items-center space-x-1.5">
-                <Clock className="h-4.5 w-4.5 text-brandRed" />
+              <span className="text-sm font-semibold text-brandText-dark">
                 <span>Hours Status</span>
               </span>
               <span className={`text-sm font-bold tracking-wide ${isOpen ? "text-badge-verified" : "text-brandRed"}`}>
@@ -754,8 +752,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
 
           {/* Booking Appointment Widget */}
           <section className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-4">
-            <h2 className="text-lg font-bold text-brandText-dark font-heading flex items-center space-x-2">
-              <Calendar className="h-5 w-5 text-brandRed" />
+            <h2 className="text-lg font-bold text-brandText-dark font-heading">
               <span>Book Appointment</span>
             </h2>
 
@@ -915,9 +912,8 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
               <button
                 type="submit"
                 disabled={leadLoading}
-                className="w-full bg-brandRed hover:bg-brandRed-hover text-white text-sm font-bold p-2.5 rounded-btn transition duration-250 disabled:opacity-50 flex items-center justify-center space-x-2"
+                className="w-full bg-brandRed hover:bg-brandRed-hover text-white text-sm font-bold p-2.5 rounded-btn transition duration-250 disabled:opacity-50 text-center"
               >
-                <Send className="h-4 w-4" />
                 <span>{leadLoading ? "Sending..." : "Send Message"}</span>
               </button>
             </form>

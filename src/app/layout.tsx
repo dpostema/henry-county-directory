@@ -41,10 +41,11 @@ export default function RootLayout({
 }>) {
   return (
     <html
+      suppressHydrationWarning
       lang="en"
       className={cn("h-full", "antialiased", outfit.variable, inter.variable, "font-sans", geist.variable)}
     >
-      <body className="min-h-full flex flex-col bg-brandBg-app text-brandText-medium font-body">
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-brandBg-app text-brandText-medium font-body">
         <PWA />
         {children}
         <Analytics />

@@ -132,6 +132,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
             {/* What */}
             <div className="flex-1 px-4 py-3 flex items-center border-b sm:border-b-0 border-brandBorder-light">
               <input
+                suppressHydrationWarning
                 type="text"
                 placeholder="What are you looking for?"
                 value={searchQuery}
@@ -144,7 +145,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
             <div className="hidden sm:block w-px bg-slate-200 mx-2 my-2"></div>
             <div className="flex-1 px-4 py-3 flex items-center border-b sm:border-b-0 border-brandBorder-light">
               <Select value={selectedCity} onValueChange={(val) => setSelectedCity(val || "all")}>
-                <SelectTrigger className="w-full bg-transparent border-none shadow-none text-sm text-brandText-dark font-medium h-auto p-0 focus:ring-0 focus:ring-offset-0">
+                <SelectTrigger suppressHydrationWarning className="w-full bg-transparent border-none shadow-none text-sm text-brandText-dark font-medium h-auto p-0 focus:ring-0 focus:ring-offset-0">
                   <SelectValue placeholder="All Cities" />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,6 +160,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
 
             {/* Search Button */}
             <button
+              suppressHydrationWarning
               type="submit"
               className="bg-[#ff385c] hover:bg-[#e31c5f] text-white text-sm font-bold px-8 py-4 rounded transition-colors flex items-center justify-center space-x-2 whitespace-nowrap ml-1"
             >
@@ -176,6 +178,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
                 const isActive = activeCategory === cat.slug;
                 return (
                   <button
+                    suppressHydrationWarning
                     key={cat.slug}
                     onClick={() => setActiveCategory(isActive ? null : cat.slug)}
                     className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg transition-all duration-200 backdrop-blur-sm ${
@@ -248,10 +251,10 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
               <span className="font-normal text-brandText-medium">Destinations</span>
             </h2>
             <div className="flex space-x-2">
-              <button className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
+              <button suppressHydrationWarning className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <button className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
+              <button suppressHydrationWarning className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
@@ -305,6 +308,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
               { label: "Ad Directory", filter: "ad" }
             ].map((tab) => (
               <button
+                suppressHydrationWarning
                 key={tab.filter}
                 onClick={() => setActiveTab(tab.filter)}
                 className={`px-4 py-3 border-b-2 transition-all ${

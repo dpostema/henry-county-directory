@@ -17,10 +17,12 @@ import {
   Save,
   CheckCircle2,
   Menu,
-  X
+  X,
+  Camera,
+  User
 } from "lucide-react";
 import { logout } from "../auth/actions";
-import { updateProfileAction } from "./actions";
+import { updateProfileAction, updateAvatarAction } from "./actions";
 
 interface VisitorDashboardProps {
   userProfile: any;
@@ -36,9 +38,22 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
   // Settings Form State
   const [fullName, setFullName] = useState(userProfile?.full_name || "");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(userProfile?.avatar_url || null);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
 
   useEffect(() => {
+    // Check onboarding status
+    try {
+      const hasSeen = localStorage.getItem(`onboarding_completed_${userProfile?.id}`);
+      if (!hasSeen) {
+        setShowWelcomeModal(true);
+      }
+    } catch (e) {
+      console.error("Could not read localStorage for onboarding", e);
+    }
+
     // Load history from local storage
     try {
       const stored = localStorage.getItem("recent_history");
@@ -51,12 +66,32 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
     }
   }, []);
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaveStatus("saving");
     try {
       const res = await updateProfileAction(fullName);
       if (res?.error) throw new Error(res.error);
+      
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append("avatar", avatarFile);
+        const avatarRes = await updateAvatarAction(formData);
+        if (avatarRes?.error) throw new Error(avatarRes.error);
+        if (avatarRes?.avatarUrl) {
+          setAvatarPreview(avatarRes.avatarUrl);
+          setAvatarFile(null); // Clear pending file
+        }
+      }
+
       setSaveStatus("success");
       setTimeout(() => setSaveStatus("idle"), 3000);
     } catch (err) {
@@ -264,7 +299,32 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
             </div>
             
             <div className="max-w-lg bg-brandBg-card rounded-xl border border-brandBorder-light shadow-sm p-6">
-              <form onSubmit={handleSaveProfile} className="space-y-5">
+              <form onSubmit={handleSaveProfile} className="space-y-6">
+                
+                <div className="flex flex-col items-start mb-2">
+                  <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-3">Profile Photo</label>
+                  <label htmlFor="avatar-upload" className="relative cursor-pointer group">
+                    <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center bg-slate-50 group-hover:border-brandRed transition-colors relative">
+                      {avatarPreview ? (
+                        <Image src={avatarPreview} alt="Avatar" fill className="object-cover" />
+                      ) : (
+                        <User className="w-8 h-8 text-slate-400 group-hover:text-brandRed transition-colors" />
+                      )}
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Camera className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      id="avatar-upload"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarChange}
+                    />
+                  </label>
+                  <span className="text-[10px] text-brandText-light mt-2 font-medium">Click to change</span>
+                </div>
+
                 <div>
                   <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-2">Full Name</label>
                   <input
@@ -529,6 +589,68 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
           </aside>
         </div>
       </div>
+
+      {/* Welcome Onboarding Modal */}
+      {showWelcomeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden relative animate-in zoom-in-95 duration-300">
+            {/* Header Art */}
+            <div className="bg-brandRed/5 pt-8 pb-6 px-6 flex justify-center border-b border-brandRed/10 relative">
+              <div className="flex flex-col items-center gap-3">
+                <Image 
+                  src="/logo.svg" 
+                  alt={`${siteConfig.name} Logo`} 
+                  width={48} 
+                  height={48} 
+                  className="object-contain" 
+                />
+              </div>
+              <button 
+                onClick={() => {
+                  setShowWelcomeModal(false);
+                  localStorage.setItem(`onboarding_completed_${userProfile?.id}`, "true");
+                }}
+                className="absolute top-4 right-4 h-8 w-8 rounded-full bg-white/50 flex items-center justify-center text-brandText-medium hover:bg-white hover:text-brandText-dark transition-colors"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+            
+            <div className="p-6 text-center">
+              <h3 className="text-xl font-bold font-heading text-brandText-dark mb-2">
+                Welcome to Henry County Directory!
+              </h3>
+              <p className="text-sm text-brandText-medium font-light mb-6">
+                We're excited to have you here. You can save your favorite local spots, leave reviews, and help the community grow.
+              </p>
+              
+              <div className="space-y-3">
+                <button
+                  onClick={() => {
+                    setShowWelcomeModal(false);
+                    localStorage.setItem(`onboarding_completed_${userProfile?.id}`, "true");
+                    setActiveTab("settings");
+                  }}
+                  className="w-full flex items-center justify-center bg-brandRed text-white py-2.5 rounded-full text-sm font-bold shadow-sm hover:bg-brandRed-hover transition-colors gap-2"
+                >
+                  <Settings className="h-4 w-4" />
+                  Complete Your Profile
+                </button>
+                <Link
+                  href="/"
+                  onClick={() => {
+                    localStorage.setItem(`onboarding_completed_${userProfile?.id}`, "true");
+                  }}
+                  className="w-full flex items-center justify-center bg-brandBg-card text-brandText-dark py-2.5 rounded-full text-sm font-bold border border-brandBorder-light hover:bg-slate-50 transition-colors gap-2"
+                >
+                  <MapPin className="h-4 w-4" />
+                  Explore Directory
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Logout Modal */}
       {showLogoutModal && (

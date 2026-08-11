@@ -19,6 +19,7 @@ import {
   replyToReviewAction,
   answerQuestionAction,
   updateProfileAction,
+  updateAvatarAction,
   markLeadStatusAction,
   sendReferralAction,
   updateBookingStatusAction,
@@ -50,7 +51,9 @@ import {
   ArrowLeft,
   ArrowRight,
   MapPin,
-  ChevronDown
+  ChevronDown,
+  Camera,
+  User
 } from "lucide-react";
 
 interface DashboardClientProps {
@@ -95,12 +98,15 @@ export default function DashboardClient({
 
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [newLeadNotification, setNewLeadNotification] = useState(false);
+  const [skipOwnerOnboarding, setSkipOwnerOnboarding] = useState(false);
 
   // Form loader/alert states
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [formSuccess, setFormSuccess] = useState<string | null>(null);
   const [newPhotoFile, setNewPhotoFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(userProfile?.avatar_url || null);
   const [descInput, setDescInput] = useState("");
   const [reviewRepliesText, setReviewRepliesText] = useState<Record<string, string>>({});
   const [selectedLeadId, setSelectedLeadId] = useState<string | null>(null);
@@ -425,6 +431,14 @@ export default function DashboardClient({
     }
   };
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAvatarFile(file);
+      setAvatarPreview(URL.createObjectURL(file));
+    }
+  };
+
   const handleUpdateProfile = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError(null);
@@ -435,6 +449,22 @@ export default function DashboardClient({
     const name = formData.get("fullName") as string;
 
     const res = await updateProfileAction(name);
+    
+    if (avatarFile) {
+      const avatarFormData = new FormData();
+      avatarFormData.append("avatar", avatarFile);
+      const avatarRes = await updateAvatarAction(avatarFormData);
+      if (avatarRes?.error) {
+        setFormError(avatarRes.error);
+        setFormLoading(false);
+        return;
+      }
+      if (avatarRes?.avatarUrl) {
+        setAvatarPreview(avatarRes.avatarUrl);
+        setAvatarFile(null);
+      }
+    }
+
     setFormLoading(false);
     if (res?.error) {
       setFormError(res.error);
@@ -558,6 +588,56 @@ export default function DashboardClient({
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   if (businesses.length === 0) {
+    if (userProfile?.role === "owner" && !skipOwnerOnboarding) {
+      return (
+        <div className="min-h-screen bg-[#F4F5F7] flex items-center justify-center p-4 font-body relative overflow-hidden">
+          {/* Decorative Background */}
+          <div className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full bg-brandRed/5 blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] rounded-full bg-brandRed/5 blur-3xl pointer-events-none" />
+
+          <div className="bg-white rounded-3xl shadow-xl max-w-md w-full p-8 text-center border border-slate-100 relative z-10 animate-in zoom-in-95 duration-300">
+            <div className="flex flex-col items-center gap-3 mb-6">
+              <Image 
+                src="/logo.svg" 
+                alt={`${siteConfig.name} Logo`} 
+                width={48} 
+                height={48} 
+                className="object-contain" 
+              />
+            </div>
+            <h2 className="text-2xl font-black font-heading text-slate-900 tracking-tight mb-3">
+              Welcome to your Portal!
+            </h2>
+            <p className="text-slate-500 mb-8 font-light text-sm px-2">
+              To unlock your business dashboard, you need to either claim your existing directory listing or create a new one.
+            </p>
+            <div className="space-y-3.5">
+              <Link 
+                href="/claim" 
+                className="flex items-center justify-center w-full py-3 bg-brandRed text-white rounded-full font-bold shadow-md hover:bg-brandRed-hover transition-colors gap-2 text-sm"
+              >
+                <CheckCircle className="h-4 w-4" />
+                Claim Existing Business
+              </Link>
+              <Link 
+                href="/add-business" 
+                className="flex items-center justify-center w-full py-3 bg-white text-slate-900 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-colors gap-2 text-sm"
+              >
+                <Plus className="h-4 w-4" />
+                Add New Business
+              </Link>
+            </div>
+            <button 
+              onClick={() => setSkipOwnerOnboarding(true)} 
+              className="mt-8 text-xs text-slate-400 hover:text-brandText-dark transition-colors font-medium tracking-wide"
+            >
+              Skip to Visitor Dashboard
+            </button>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <VisitorDashboard 
         userProfile={userProfile} 
@@ -1709,6 +1789,32 @@ export default function DashboardClient({
                 <h3 className="text-base font-bold text-brandText-dark font-heading border-b border-brandBorder-light pb-2">
                   Account Details
                 </h3>
+
+                <div className="flex flex-col items-start mb-4">
+                  <label className="block text-xs font-semibold text-brandText-dark mb-3">
+                    Profile Photo
+                  </label>
+                  <label htmlFor="owner-avatar" className="relative cursor-pointer group">
+                    <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center bg-slate-50 group-hover:border-brandRed transition-colors relative">
+                      {avatarPreview ? (
+                        <Image src={avatarPreview} alt="Avatar" fill className="object-cover" />
+                      ) : (
+                        <User className="w-8 h-8 text-slate-400 group-hover:text-brandRed transition-colors" />
+                      )}
+                      <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Camera className="w-6 h-6 text-white" />
+                      </div>
+                    </div>
+                    <input
+                      type="file"
+                      id="owner-avatar"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleAvatarChange}
+                    />
+                  </label>
+                  <span className="text-[10px] text-brandText-light mt-2 font-medium">Click to change</span>
+                </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-brandText-dark mb-1">

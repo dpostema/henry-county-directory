@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { signup } from "../actions";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, ChevronDown, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle } from "lucide-react";
+import { Mail, Lock, User, ChevronDown, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function SignupPage() {
@@ -14,6 +14,7 @@ export default function SignupPage() {
   const [success, setSuccess] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -25,6 +26,16 @@ export default function SignupPage() {
     });
   }, [router]);
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setAvatarPreview(url);
+    } else {
+      setAvatarPreview(null);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
@@ -32,6 +43,7 @@ export default function SignupPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    formData.append("origin", window.location.origin);
     const res = await signup(formData);
 
     setLoading(false);
@@ -82,6 +94,31 @@ export default function SignupPage() {
 
             {/* Signup Form */}
             <form onSubmit={handleSubmit} className="space-y-3.5 max-w-sm mx-auto">
+              {/* Avatar Upload */}
+              <div className="flex flex-col items-center mb-4">
+                <label htmlFor="avatar" className="relative cursor-pointer group">
+                  <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center bg-slate-50 group-hover:border-[#E8505B] transition-colors relative">
+                    {avatarPreview ? (
+                      <Image src={avatarPreview} alt="Avatar Preview" fill className="object-cover" />
+                    ) : (
+                      <User className="w-6 h-6 text-slate-400 group-hover:text-[#E8505B] transition-colors" />
+                    )}
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Camera className="w-5 h-5 text-white" />
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleAvatarChange}
+                  />
+                </label>
+                <span className="text-[10px] text-slate-500 mt-1.5 font-medium uppercase tracking-wider">Profile Photo (Optional)</span>
+              </div>
+
               <div className="relative">
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input

@@ -31,18 +31,45 @@ export async function signup(formData: FormData) {
   const password = formData.get("password") as string;
   const fullName = formData.get("fullName") as string;
   const role = formData.get("role") as string; // 'visitor' or 'owner'
+  const origin = formData.get("origin") as string || process.env.NEXT_PUBLIC_SITE_URL;
+  const avatar = formData.get("avatar") as File | null;
 
   if (!email || !password || !fullName || !role) {
     return { error: "All fields are required." };
+  }
+
+  let avatarUrl: string | undefined = undefined;
+
+  // Try to upload the avatar if provided
+  if (avatar && avatar.size > 0) {
+    const fileExt = avatar.name.split('.').pop() || 'jpg';
+    const fileName = `avatar_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+    
+    const { error: uploadError } = await supabase.storage
+      .from('business-images')
+      .upload(fileName, avatar);
+      
+    if (!uploadError) {
+      const { data: publicUrlData } = supabase.storage
+        .from('business-images')
+        .getPublicUrl(fileName);
+      if (publicUrlData) {
+        avatarUrl = publicUrlData.publicUrl;
+      }
+    } else {
+      console.error("Avatar upload error during signup:", uploadError);
+    }
   }
 
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      emailRedirectTo: origin ? `${origin}/dashboard` : undefined,
       data: {
         full_name: fullName,
         role: role,
+        avatar_url: avatarUrl,
       },
     },
   });

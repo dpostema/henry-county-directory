@@ -26,7 +26,7 @@ export default async function AddListingPage() {
 
   return (
     <div className="min-h-screen bg-brandBg-app flex flex-col font-body">
-      <Header />
+      <Header sticky={false} />
       <main className="flex-grow flex items-center justify-center px-4 py-16">
         <div className="w-full max-w-2xl bg-white rounded-xl shadow-sm border border-brandBorder-light p-8">
           <div className="mb-8 border-b border-brandBorder-light pb-4">

@@ -408,3 +408,56 @@ export async function generateAIReviewReplyAction(rating: number, comment: strin
     return { error: err.message };
   }
 }
+
+export async function updateAvatarAction(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { error: "Authentication required." };
+  }
+
+  const avatar = formData.get("avatar") as File;
+  if (!avatar || avatar.size === 0) {
+    return { error: "No image selected." };
+  }
+
+  const fileExt = avatar.name.split('.').pop() || 'jpg';
+  const fileName = `avatar_${user.id}_${Date.now()}.${fileExt}`;
+
+  const { error: uploadError } = await supabase.storage
+    .from('business-images')
+    .upload(fileName, avatar, { upsert: true });
+
+  if (uploadError) {
+    return { error: uploadError.message };
+  }
+
+  const { data: publicUrlData } = supabase.storage
+    .from('business-images')
+    .getPublicUrl(fileName);
+
+  if (!publicUrlData) {
+    return { error: "Failed to get public URL." };
+  }
+
+  const avatarUrl = publicUrlData.publicUrl;
+
+  // Update profile
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ avatar_url: avatarUrl })
+    .eq('id', user.id);
+
+  if (updateError) {
+    return { error: updateError.message };
+  }
+
+  // Update auth metadata
+  await supabase.auth.updateUser({
+    data: { avatar_url: avatarUrl }
+  });
+
+  revalidatePath("/", "layout");
+  return { success: "Avatar updated successfully!", avatarUrl };
+}

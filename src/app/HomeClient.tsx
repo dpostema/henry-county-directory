@@ -225,9 +225,8 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
                 desc: "Go and have a good time or even make a booking directly from the listing page. All of those, thanks to HenryCountyDirectory."
               }
             ].map((step) => (
-              <div key={step.num} className="relative p-6">
-                {/* Big watermark number */}
-                <span className="absolute top-2 right-6 text-7xl font-black text-slate-100 select-none pointer-events-none">
+              <div key={step.num} className="relative p-6 flex items-start gap-5">
+                <span className="text-6xl font-black text-slate-100 select-none pointer-events-none leading-none -mt-2">
                   {step.num}
                 </span>
                 <div className="relative w-full">

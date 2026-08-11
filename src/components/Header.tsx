@@ -12,6 +12,7 @@ import { siteConfig } from "@/config/site";
 
 export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
   const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -26,6 +27,14 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
         data: { user: currentUser },
       } = await supabase.auth.getUser();
       setUser(currentUser);
+      
+      if (currentUser) {
+        setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
+        const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', currentUser.id).single();
+        if (profile?.avatar_url) {
+          setAvatarUrl(profile.avatar_url);
+        }
+      }
     }
     getUser();
 
@@ -114,8 +123,14 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center space-x-1 focus:outline-none"
                 >
-                  <div className="h-8 w-8 rounded-full bg-slate-100 text-brandText-dark flex items-center justify-center font-bold text-sm border border-brandBorder-light shadow-sm hover:bg-slate-200 transition-colors">
-                    {user.email ? user.email.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
+                  <div className="h-8 w-8 rounded-full bg-slate-100 text-brandText-dark flex items-center justify-center font-bold text-sm border border-brandBorder-light shadow-sm hover:bg-slate-200 transition-colors overflow-hidden relative">
+                    {avatarUrl ? (
+                      <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
+                    ) : user.email ? (
+                      user.email.charAt(0).toUpperCase()
+                    ) : (
+                      <User className="h-4 w-4" />
+                    )}
                   </div>
                   <ChevronDown className="h-3.5 w-3.5 text-brandText-light" />
                 </button>

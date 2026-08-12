@@ -112,6 +112,8 @@ export default function DirectoryClient({ initialListings }: { initialListings?:
                     <SelectItem value="stockbridge">Stockbridge, GA</SelectItem>
                     <SelectItem value="hampton">Hampton, GA</SelectItem>
                     <SelectItem value="locust-grove">Locust Grove, GA</SelectItem>
+                    <SelectItem value="flippen">Flippen, GA</SelectItem>
+                    <SelectItem value="blacksville">Blacksville, GA</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

@@ -173,6 +173,8 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
                   <SelectItem value="stockbridge">Stockbridge</SelectItem>
                   <SelectItem value="hampton">Hampton</SelectItem>
                   <SelectItem value="locust-grove">Locust Grove</SelectItem>
+                  <SelectItem value="flippen">Flippen</SelectItem>
+                  <SelectItem value="blacksville">Blacksville</SelectItem>
                 </SelectContent>
               </Select>
             </div>

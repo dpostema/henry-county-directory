@@ -192,43 +192,43 @@ export async function submitFallbackClaimAction(
 
   if (!limitCheck.canAdd) {
     return { error: `You have reached your limit of ${limitCheck.maxAllowed} businesses for your current plan. Please upgrade to claim more.` };
+
+
+    // 1. Insert fallback claim request
+    const { error: requestError } = await supabase.from("claim_requests").insert({
+      business_id: businessId,
+      user_id: user.id,
+      full_name: fullName,
+      phone,
+      email,
+      notes: notes || null,
+      status: "pending",
+    });
+
+    if (requestError) {
+      return { error: requestError.message };
+    }
+
+    // 2. Place business into "soft-claim" state (owner can edit basic details immediately)
+    const adminClient = createSupabaseAdmin(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
+    const { error: softClaimError } = await adminClient
+      .from("businesses")
+      .update({
+        owner_id: user.id,
+        status: "claimed_unverified",
+      })
+      .eq("id", businessId);
+
+    if (softClaimError) {
+      return { error: softClaimError.message };
+    }
+
+    revalidatePath("/", "layout");
+    return {
+      success: "Claim request submitted! You have been granted soft-claim access to edit details while admin review is pending.",
+    };
   }
-
-  // 1. Insert fallback claim request
-  const { error: requestError } = await supabase.from("claim_requests").insert({
-    business_id: businessId,
-    user_id: user.id,
-    full_name: fullName,
-    phone,
-    email,
-    notes: notes || null,
-    status: "pending",
-  });
-
-  if (requestError) {
-    return { error: requestError.message };
-  }
-
-  // 2. Place business into "soft-claim" state (owner can edit basic details immediately)
-  const adminClient = createSupabaseAdmin(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
-  );
-
-  const { error: softClaimError } = await adminClient
-    .from("businesses")
-    .update({
-      owner_id: user.id,
-      status: "claimed_unverified",
-    })
-    .eq("id", businessId);
-
-  if (softClaimError) {
-    return { error: softClaimError.message };
-  }
-
-  revalidatePath("/", "layout");
-  return {
-    success: "Claim request submitted! You have been granted soft-claim access to edit details while admin review is pending.",
-  };
-}

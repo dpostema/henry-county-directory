@@ -71,14 +71,15 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth;
+      // clientWidth + 24px (gap-6) ensures we scroll exactly one full "page" to the next snap point
+      const scrollAmount = scrollContainerRef.current.clientWidth + 24;
       scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (scrollContainerRef.current) {
-      const scrollAmount = scrollContainerRef.current.clientWidth;
+      const scrollAmount = scrollContainerRef.current.clientWidth + 24;
       scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
@@ -130,6 +131,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
             src="/hero-img.jpg"
             alt="City Background"
             fill
+            sizes="100vw"
             className="object-cover object-center opacity-60"
             priority
           />

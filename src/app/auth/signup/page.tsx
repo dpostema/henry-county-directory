@@ -99,7 +99,7 @@ export default function SignupPage() {
                 <label htmlFor="avatar" className="relative cursor-pointer group">
                   <div className="w-16 h-16 rounded-full border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center bg-slate-50 group-hover:border-[#E8505B] transition-colors relative">
                     {avatarPreview ? (
-                      <Image src={avatarPreview} alt="Avatar Preview" fill className="object-cover" />
+                      <Image src={avatarPreview} alt="Avatar Preview" fill sizes="80px" className="object-cover" />
                     ) : (
                       <User className="w-6 h-6 text-slate-400 group-hover:text-[#E8505B] transition-colors" />
                     )}

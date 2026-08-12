@@ -306,7 +306,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                   <label htmlFor="avatar-upload" className="relative cursor-pointer group">
                     <div className="w-20 h-20 rounded-full border-2 border-dashed border-slate-300 overflow-hidden flex items-center justify-center bg-slate-50 group-hover:border-brandRed transition-colors relative">
                       {avatarPreview ? (
-                        <Image src={avatarPreview} alt="Avatar" fill className="object-cover" />
+                        <Image src={avatarPreview} alt="Avatar" fill sizes="80px" className="object-cover" />
                       ) : (
                         <User className="w-8 h-8 text-slate-400 group-hover:text-brandRed transition-colors" />
                       )}
@@ -506,7 +506,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
             <div className="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm text-center space-y-4">
               <div className="relative mx-auto w-20 h-20 rounded-full bg-red-50 border-2 border-red-100 flex items-center justify-center shadow-inner overflow-hidden">
                 {userProfile?.avatar_url ? (
-                  <Image src={userProfile.avatar_url} alt={userProfile.full_name || "User"} fill className="object-cover" />
+                  <Image src={userProfile.avatar_url} alt={userProfile.full_name || "User"} fill sizes="64px" className="object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-tr from-[#E8505B] to-red-400 flex items-center justify-center text-white text-2xl font-black font-heading">
                     {(userProfile?.full_name || "V")[0].toUpperCase()}

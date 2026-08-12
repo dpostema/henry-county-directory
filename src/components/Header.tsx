@@ -125,7 +125,7 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
                 >
                   <div className="h-8 w-8 rounded-full bg-slate-100 text-brandText-dark flex items-center justify-center font-bold text-sm border border-brandBorder-light shadow-sm hover:bg-slate-200 transition-colors overflow-hidden relative">
                     {avatarUrl ? (
-                      <Image src={avatarUrl} alt="Avatar" fill className="object-cover" />
+                      <Image src={avatarUrl} alt="Avatar" fill sizes="40px" className="object-cover" />
                     ) : user.email ? (
                       user.email.charAt(0).toUpperCase()
                     ) : (

@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   title: `${siteConfig.name} — ${siteConfig.description}`,
   description: siteConfig.description,
   manifest: "/manifest.json",
+  metadataBase: new URL("https://henry-county-directory-39m1cwpsm.vercel.app"),
 };
 
 export const viewport: Viewport = {

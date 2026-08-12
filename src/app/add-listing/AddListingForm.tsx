@@ -227,7 +227,7 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
           </div>
           <div>
             <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-1.5">Postal Code</label>
-            <input type="text" name="postalCode" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="30253" className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors cursor-pointer" />
+            <input type="text" name="postalCode" value={postalCode || ""} onChange={(e) => setPostalCode(e.target.value)} placeholder="30253" className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors cursor-pointer" />
           </div>
         </div>
       </div>

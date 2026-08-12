@@ -32,7 +32,9 @@ const DESTINATIONS = [
   { name: "McDonough", slug: "mcdonough", count: 20, image: "/mcDonough.png" },
   { name: "Stockbridge", slug: "stockbridge", count: 6, image: "/stockbridge-ga.avif" },
   { name: "Hampton", slug: "hampton", count: 12, image: "/hampton.jpg" },
-  { name: "Locust Grove", slug: "locust-grove", count: 4, image: "/locustgrove.jpg" }
+  { name: "Locust Grove", slug: "locust-grove", count: 4, image: "/locustgrove.jpg" },
+  { name: "Flippen", slug: "flippen", count: 0, image: "/flippen.png" },
+  { name: "Blacksville", slug: "blacksville", count: 0, image: "/blacksville.png" }
 ];
 
 
@@ -65,6 +67,21 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
   }, [destinationCounts]);
 
   const isFirstRender = useRef(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth;
+      scrollContainerRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = scrollContainerRef.current.clientWidth;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -250,21 +267,25 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
               <span className="font-normal text-brandText-medium">Destinations</span>
             </h2>
             <div className="flex space-x-2">
-              <button suppressHydrationWarning className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
+              <button suppressHydrationWarning onClick={scrollLeft} className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
                 <ChevronLeft className="h-4 w-4" />
               </button>
-              <button suppressHydrationWarning className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
+              <button suppressHydrationWarning onClick={scrollRight} className="h-10 w-10 rounded-full bg-white border border-brandBorder-light flex items-center justify-center hover:bg-slate-50 transition-colors text-brandText-light hover:text-brandText-dark">
                 <ChevronRight className="h-4 w-4" />
               </button>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div 
+            ref={scrollContainerRef}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4" 
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          >
             {dynamicDestinations.map((dest, i) => (
               <Link
                 key={dest.slug}
                 href={`/city/${dest.slug}`}
-                className="group relative h-72 rounded-xl overflow-hidden flex items-end hover:shadow-lg transition-all duration-300"
+                className="group relative h-72 w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)] flex-shrink-0 snap-start rounded-xl overflow-hidden flex items-end hover:shadow-lg transition-all duration-300"
               >
                 <Image
                   src={dest.image}

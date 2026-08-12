@@ -29,10 +29,10 @@ const CATEGORIES = [
 
 // Destinations
 const DESTINATIONS = [
-  { name: "McDonough", slug: "mcdonough", count: 20, image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=500&auto=format&fit=crop&q=60" },
-  { name: "Stockbridge", slug: "stockbridge", count: 6, image: "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=500&auto=format&fit=crop&q=60" },
-  { name: "Hampton", slug: "hampton", count: 12, image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=500&auto=format&fit=crop&q=60" },
-  { name: "Locust Grove", slug: "locust-grove", count: 4, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500&auto=format&fit=crop&q=60" }
+  { name: "McDonough", slug: "mcdonough", count: 20, image: "/mcDonough.png" },
+  { name: "Stockbridge", slug: "stockbridge", count: 6, image: "/stockbridge-ga.avif" },
+  { name: "Hampton", slug: "hampton", count: 12, image: "/hampton.jpg" },
+  { name: "Locust Grove", slug: "locust-grove", count: 4, image: "/locustgrove.jpg" }
 ];
 
 

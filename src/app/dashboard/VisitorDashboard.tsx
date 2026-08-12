@@ -377,12 +377,16 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
     <div className="min-h-screen bg-[#F8F9FA] flex flex-col justify-between font-body text-slate-700">
       {/* Mobile Header */}
       <div className="md:hidden bg-white border-b border-slate-100 px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm">
-        <div className="font-heading font-black text-lg text-slate-900 flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-[#E8505B] text-white flex items-center justify-center">
-            <MapPin className="h-4 w-4" />
-          </div>
-          <span>{siteConfig.name}</span>
-        </div>
+        <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+          <Image 
+            src="/logo.svg" 
+            alt={`${siteConfig.name} Logo`}
+            width={28} 
+            height={28} 
+            className="object-contain" 
+          />
+          <span className="font-heading font-black text-lg text-slate-900 tracking-tight">{siteConfig.name}</span>
+        </Link>
         <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 -mr-2 text-slate-700 rounded-lg hover:bg-slate-50">
           {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>

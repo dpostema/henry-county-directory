@@ -57,7 +57,8 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
     }));
   };
 
-  const handleCityChange = (cityId: string) => {
+  const handleCityChange = (cityId: string | null) => {
+    if (!cityId) return;
     const city = cities.find(c => c.id === cityId);
     if (city) {
       let zip = "";

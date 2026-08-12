@@ -8,7 +8,7 @@ import Image from "next/image";
 import { Star, MapPin, Phone, Mail, Globe, CircleCheck, Clock, MessageSquare, Send, Heart, Scale, Copy, Check, Calendar } from "lucide-react";
 import { submitLead, submitReview, submitQuestion } from "./actions";
 import { isBusinessOpenNow } from "@/services/search";
-import { toggleFavoriteAction, checkFavoriteStatus, createBookingAction } from "@/app/listings/actions";
+import { toggleFavoriteAction, checkFavoriteStatus, createBookingAction } from "@/app/(public)/listings/actions";
 import { hasFeatureAccess } from "@/utils/featureGate";
 import { getEntitlements } from "@/utils/entitlements";
 import Map from "@/components/Map";

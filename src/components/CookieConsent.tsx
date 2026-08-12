@@ -11,6 +11,7 @@ export default function CookieConsent() {
     // Check if the user has already consented
     const consent = localStorage.getItem(`${siteConfig.name.replace(/\s+/g, '_').toLowerCase()}_cookie_consent`);
     if (!consent) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShow(true);
     }
   }, []);

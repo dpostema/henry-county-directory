@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
-import HomeClient from "./HomeClient";
+import HomeClient from "./(public)/_components/HomeClient";
 import { searchBusinesses } from "@/services/search";
 
 export const revalidate = 3600; // Cache homepage for 1 hour

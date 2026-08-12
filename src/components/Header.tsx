@@ -6,7 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { User, LogOut, Menu, X, ChevronDown, LayoutDashboard } from "lucide-react";
-import { logout } from "@/app/auth/actions";
+import { logout } from "@/app/(auth)/auth/actions";
 import { User as SupabaseUser } from "@supabase/supabase-js";
 import { siteConfig } from "@/config/site";
 

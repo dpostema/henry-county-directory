@@ -21,7 +21,7 @@ import {
   Camera,
   User
 } from "lucide-react";
-import { logout } from "../auth/actions";
+import { logout } from "@/app/(auth)/auth/actions";
 import { updateProfileAction, updateAvatarAction } from "./actions";
 
 interface VisitorDashboardProps {
@@ -48,6 +48,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
     try {
       const hasSeen = localStorage.getItem(`onboarding_completed_${userProfile?.id}`);
       if (!hasSeen) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowWelcomeModal(true);
       }
     } catch (e) {
@@ -625,7 +626,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                 Welcome to Henry County Directory!
               </h3>
               <p className="text-sm text-brandText-medium font-light mb-6">
-                We're excited to have you here. You can save your favorite local spots, leave reviews, and help the community grow.
+                We&apos;re excited to have you here. You can save your favorite local spots, leave reviews, and help the community grow.
               </p>
               
               <div className="space-y-3">

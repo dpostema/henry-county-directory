@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
-import { optInDigestAction } from "@/app/listings/actions";
+import { optInDigestAction } from "@/app/(public)/listings/actions";
 import { siteConfig } from "@/config/site";
 
 export default function Footer() {

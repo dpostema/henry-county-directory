@@ -13,6 +13,7 @@ interface AddListingFormProps {
 export default function AddListingForm({ categories, cities }: AddListingFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [postalCode, setPostalCode] = useState("");
   
   const [hours, setHours] = useState<Record<string, { open: string; close: string; closed: boolean }>>({
     Monday: { open: "09:00", close: "17:00", closed: false },
@@ -56,6 +57,23 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
     }));
   };
 
+  const handleCityChange = (cityId: string) => {
+    const city = cities.find(c => c.id === cityId);
+    if (city) {
+      let zip = "";
+      switch (city.name.toLowerCase()) {
+        case "mcdonough": zip = "30253"; break;
+        case "stockbridge": zip = "30281"; break;
+        case "hampton": zip = "30228"; break;
+        case "locust grove": zip = "30248"; break;
+        case "jackson": zip = "30233"; break;
+        case "griffin": zip = "30223"; break;
+        case "jonesboro": zip = "30236"; break;
+      }
+      if (zip) setPostalCode(zip);
+    }
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-10">
       
@@ -77,7 +95,7 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
         
               <SelectItem value="___placeholder___" disabled>Select Category...</SelectItem>
               {categories.map((cat) => (
-                <SelectItem key={cat.id} value="{cat.id}">{cat.name}</SelectItem>
+                <SelectItem key={cat.id} value={cat.id}>{cat.name}</SelectItem>
               ))}
             
       </SelectContent>
@@ -188,7 +206,7 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
           </div>
           <div>
             <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-1.5">City *</label>
-            <Select name="cityId" required>
+            <Select name="cityId" required onValueChange={handleCityChange}>
       <SelectTrigger className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed  transition-colors  cursor-pointer bg-white">
         <SelectValue placeholder="Select City..." />
       </SelectTrigger>
@@ -196,7 +214,7 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
         
               <SelectItem value="___placeholder___" disabled>Select City...</SelectItem>
               {cities.map((city) => (
-                <SelectItem key={city.id} value="{city.id}">{city.name}, GA</SelectItem>
+                <SelectItem key={city.id} value={city.id}>{city.name}, GA</SelectItem>
               ))}
             
       </SelectContent>
@@ -204,11 +222,11 @@ export default function AddListingForm({ categories, cities }: AddListingFormPro
           </div>
           <div>
             <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-1.5">State</label>
-            <input type="text" name="state" placeholder="Georgia" defaultValue="Georgia" className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors bg-gray-50 cursor-pointer" />
+            <input type="text" name="state" value="GA" readOnly className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors bg-gray-100 cursor-not-allowed text-brandText-light font-medium" />
           </div>
           <div>
             <label className="block text-xs font-bold text-brandText-dark uppercase tracking-wider mb-1.5">Postal Code</label>
-            <input type="text" name="postalCode" placeholder="30253" className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors cursor-pointer" />
+            <input type="text" name="postalCode" value={postalCode} onChange={(e) => setPostalCode(e.target.value)} placeholder="30253" className="w-full px-4 py-2.5 border border-brandBorder-light rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brandRed/20 focus:border-brandRed transition-colors cursor-pointer" />
           </div>
         </div>
       </div>

@@ -91,12 +91,12 @@ export default async function BestOfPage({ params }: PageProps) {
       <main className="flex-grow py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
-          <nav className="flex items-center space-x-2 text-xs font-semibold text-brandText-light mb-4">
-            <Link href="/" className="hover:text-brandRed">HOME</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="uppercase text-brandText-medium">Best Of</span>
-            <ChevronRight className="h-3 w-3" />
-            <span className="uppercase text-brandText-medium">{listTitle}</span>
+          <nav className="flex items-center gap-2 text-xs font-semibold text-brandText-light mb-4 whitespace-nowrap overflow-x-auto pb-1 hide-scrollbar">
+            <Link href="/" className="hover:text-brandRed flex-shrink-0">HOME</Link>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
+            <span className="uppercase text-brandText-medium flex-shrink-0">Best Of</span>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
+            <span className="uppercase text-brandText-medium truncate flex-shrink-0">{listTitle}</span>
           </nav>
 
           {/* Heading */}

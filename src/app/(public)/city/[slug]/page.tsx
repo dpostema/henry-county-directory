@@ -43,12 +43,12 @@ export default async function CityPage({ params }: PageProps) {
       <section className="bg-white border-b border-brandBorder-light">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
           {/* Breadcrumbs */}
-          <nav className="flex items-center space-x-2 text-[11px] font-bold text-brandText-light mb-4 uppercase tracking-wider">
-            <Link href="/" className="hover:text-brandRed transition-colors">Home</Link>
-            <span className="text-brandBorder-light">/</span>
-            <span className="text-brandText-light">City</span>
-            <span className="text-brandBorder-light">/</span>
-            <span className="text-brandRed">{cityName}</span>
+          <nav className="flex items-center gap-2 text-[11px] font-bold text-brandText-light mb-4 uppercase tracking-wider whitespace-nowrap overflow-x-auto pb-1 hide-scrollbar">
+            <Link href="/" className="hover:text-brandRed transition-colors flex-shrink-0">Home</Link>
+            <span className="text-brandBorder-light flex-shrink-0">/</span>
+            <span className="text-brandText-light flex-shrink-0">City</span>
+            <span className="text-brandBorder-light flex-shrink-0">/</span>
+            <span className="text-brandRed flex-shrink-0 truncate">{cityName}</span>
           </nav>
 
           <h1 className="text-2xl font-heading tracking-tight">

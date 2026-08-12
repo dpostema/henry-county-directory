@@ -243,12 +243,12 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 pb-24 lg:pb-8 sm:px-6 lg:px-8 w-full">
       {/* Breadcrumbs */}
-        <nav className="flex items-center space-x-2 text-[11px] font-bold text-brandText-light mb-6 uppercase tracking-wider">
-          <Link href="/" className="hover:text-brandRed transition-colors">Home</Link>
-          <span className="text-brandBorder-light">/</span>
-          <Link href={`/category/${business.category?.slug || "all"}`} className="hover:text-brandRed transition-colors">{business.category?.name || "Local Listing"}</Link>
-          <span className="text-brandBorder-light">/</span>
-          <span className="text-brandRed">{business.name}</span>
+        <nav className="flex items-center gap-2 text-[11px] font-bold text-brandText-light mb-6 uppercase tracking-wider whitespace-nowrap overflow-x-auto pb-1 hide-scrollbar">
+          <Link href="/" className="hover:text-brandRed transition-colors flex-shrink-0">Home</Link>
+          <span className="text-brandBorder-light flex-shrink-0">/</span>
+          <Link href={`/category/${business.category?.slug || "all"}`} className="hover:text-brandRed transition-colors flex-shrink-0">{business.category?.name || "Local Listing"}</Link>
+          <span className="text-brandBorder-light flex-shrink-0">/</span>
+          <span className="text-brandRed flex-shrink-0 truncate">{business.name}</span>
         </nav>
 
         {/* 1. Image Gallery */}

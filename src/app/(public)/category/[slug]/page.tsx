@@ -44,10 +44,10 @@ export default async function CategoryPage({ params }: PageProps) {
       <main className="flex-grow py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Breadcrumbs */}
-          <nav className="flex items-center space-x-2 text-xs font-semibold text-brandText-light mb-4">
-            <Link href="/" className="hover:text-brandRed">HOME</Link>
-            <span>/</span>
-            <span className="uppercase text-brandText-medium">{slug}</span>
+          <nav className="flex items-center gap-2 text-xs font-semibold text-brandText-light mb-4 whitespace-nowrap overflow-x-auto pb-1 hide-scrollbar">
+            <Link href="/" className="hover:text-brandRed flex-shrink-0">HOME</Link>
+            <span className="flex-shrink-0">/</span>
+            <span className="uppercase text-brandText-medium flex-shrink-0">{slug}</span>
           </nav>
 
           {/* Heading */}

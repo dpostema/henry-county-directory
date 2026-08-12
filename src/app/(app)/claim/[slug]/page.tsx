@@ -61,7 +61,16 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
   const [fallbackError, setFallbackError] = useState<string | null>(null);
   const [fallbackSuccess, setFallbackSuccess] = useState<string | null>(null);
 
+  const [resendTimer, setResendTimer] = useState(0);
+
   const supabase = useMemo(() => createClient(), []);
+
+  useEffect(() => {
+    if (resendTimer > 0) {
+      const timerId = setTimeout(() => setResendTimer((prev) => prev - 1), 1000);
+      return () => clearTimeout(timerId);
+    }
+  }, [resendTimer]);
 
   useEffect(() => {
     async function loadData() {
@@ -115,7 +124,7 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
   if (business.status === "claimed" && !claimSuccess) {
     return (
       <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col justify-between">
-        <Header />
+        <Header sticky={false} />
         <div className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
           <CircleCheck className="h-12 w-12 text-badge-verified mx-auto" />
           <h1 className="text-xl font-bold text-brandText-dark font-heading">Already Claimed</h1>
@@ -135,7 +144,7 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
   if (!user) {
     return (
       <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col justify-between">
-        <Header />
+        <Header sticky={false} />
         <div className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
           <ShieldAlert className="h-12 w-12 text-brandRed mx-auto" />
           <h1 className="text-xl font-bold text-brandText-dark font-heading">Authentication Required</h1>
@@ -176,6 +185,7 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
     } else if (res?.success) {
       setOtpSuccess(res.success);
       setOtpSent(true);
+      setResendTimer(60);
       if (res.targetValue) {
         setTargetValue(res.targetValue);
       }
@@ -228,8 +238,8 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
   if (claimSuccess) {
     return (
       <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col justify-between">
-        <Header />
-        <div className="mx-auto max-w-md px-4 py-16 text-center space-y-4">
+        <Header sticky={false} />
+        <div className="mx-auto max-w-md px-4 py-16 text-center space-y-4 flex-grow flex flex-col justify-center">
           <div className="h-14 w-14 bg-emerald-50 text-badge-verified border border-emerald-200 rounded-full flex items-center justify-center mx-auto shadow-sm">
             <Check className="h-8 w-8" />
           </div>
@@ -262,7 +272,7 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
 
   return (
     <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col justify-between">
-      <Header />
+      <Header sticky={false} />
 
       <main className="flex-grow py-12 px-4">
         <div className="mx-auto max-w-xl">
@@ -283,7 +293,6 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
           {!showFallback ? (
             <div className="bg-brandBg-card p-6 rounded-card border border-brandBorder-light shadow-sm space-y-6">
               <h2 className="text-base font-bold text-brandText-dark font-heading flex items-center">
-                <CircleCheck className="h-5 w-5 text-brandRed mr-2" />
                 <span>Verify Contact Ownership</span>
               </h2>
               <p className="text-xs text-brandText-light leading-relaxed">
@@ -291,7 +300,7 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
               </p>
 
               {/* Channel Selector */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <button
                   type="button"
                   onClick={() => setSelectedChannel("email")}
@@ -308,23 +317,6 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
                     {business.email ? maskEmail(business.email) : "No email listed"}
                   </span>
                 </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedChannel("phone")}
-                  disabled={!business.phone}
-                  className={`flex flex-col items-center justify-center p-4 rounded-btn border text-center transition-all ${
-                    selectedChannel === "phone"
-                      ? "border-brandRed bg-red-50/20 text-brandRed font-bold"
-                      : "border-brandBorder-light bg-white text-brandText-medium hover:bg-slate-50"
-                  } ${!business.phone ? "opacity-40 cursor-not-allowed" : ""}`}
-                >
-                  <Phone className="h-5 w-5 mb-2" />
-                  <span className="text-xs font-semibold">SMS Text</span>
-                  <span className="text-[10px] font-light mt-1 text-brandText-light">
-                    {business.phone ? maskPhone(business.phone) : "No phone listed"}
-                  </span>
-                </button>
               </div>
 
               {/* Trigger OTP */}
@@ -332,10 +324,9 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
                 <button
                   type="button"
                   onClick={handleSendOTP}
-                  disabled={otpLoading || (!business.email && !business.phone)}
+                  disabled={otpLoading || !business.email}
                   className="w-full bg-brandRed hover:bg-brandRed-hover text-white text-sm font-bold p-3 rounded-btn shadow-sm transition disabled:opacity-50 flex items-center justify-center space-x-2"
                 >
-                  <Send className="h-4.5 w-4.5" />
                   <span>{otpLoading ? "Sending OTP..." : "Send Verification Code"}</span>
                 </button>
               ) : (
@@ -366,9 +357,10 @@ export default function ClaimDetailPage({ params }: ClaimDetailPageProps) {
                   <button
                     type="button"
                     onClick={handleSendOTP}
-                    className="text-xs text-brandText-medium hover:text-brandRed font-semibold block text-center mx-auto"
+                    disabled={resendTimer > 0 || otpLoading}
+                    className="text-xs text-brandText-medium hover:text-brandRed font-semibold block text-center mx-auto disabled:opacity-50 disabled:hover:text-brandText-medium"
                   >
-                    Resend Code
+                    {resendTimer > 0 ? `Resend Code in ${resendTimer}s` : "Resend Code"}
                   </button>
                 </form>
               )}

@@ -81,12 +81,12 @@ export default async function BlogPostPage({ params }: PageProps) {
 
       <main className="flex-grow py-12">
         <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center space-x-2 text-xs font-semibold text-brandText-light mb-8">
-            <Link href="/" className="hover:text-brandRed">HOME</Link>
-            <ChevronRight className="h-3 w-3" />
-            <Link href="/blog" className="hover:text-brandRed">BLOG</Link>
-            <ChevronRight className="h-3 w-3" />
-            <span className="uppercase text-brandText-medium truncate">{article.title}</span>
+          <nav className="flex items-center gap-2 text-xs font-semibold text-brandText-light mb-8 whitespace-nowrap overflow-x-auto pb-1 hide-scrollbar">
+            <Link href="/" className="hover:text-brandRed flex-shrink-0">HOME</Link>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
+            <Link href="/blog" className="hover:text-brandRed flex-shrink-0">BLOG</Link>
+            <ChevronRight className="h-3 w-3 flex-shrink-0" />
+            <span className="uppercase text-brandText-medium truncate flex-shrink-0">{article.title}</span>
           </nav>
 
           <header className="mb-10 text-center">

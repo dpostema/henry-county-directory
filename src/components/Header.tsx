@@ -27,7 +27,7 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
         data: { user: currentUser },
       } = await supabase.auth.getUser();
       setUser(currentUser);
-      
+
       if (currentUser) {
         setAvatarUrl(currentUser.user_metadata?.avatar_url || null);
         const { data: profile } = await supabase.from('profiles').select('avatar_url').eq('id', currentUser.id).single();
@@ -45,7 +45,7 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
     return () => {
       subscription.unsubscribe();
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -66,21 +66,20 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
 
   return (
     <header
-      className={`${sticky ? "sticky top-0" : "relative"} z-50 bg-white transition-shadow duration-300 ${
-        scrolled ? "shadow-md" : "shadow-sm"
-      }`}
+      className={`${sticky ? "sticky top-0" : "relative"} z-50 bg-white transition-shadow duration-300 ${scrolled ? "shadow-md" : "shadow-sm"
+        }`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo & Brand */}
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="flex items-center space-x-1.5 group">
-              <Image 
-                src="/logo.svg" 
-                alt={`${siteConfig.name} Logo`} 
-                width={28} 
-                height={28} 
-                className="object-contain transition-transform group-hover:scale-105" 
+              <Image
+                src="/logo.svg"
+                alt={`${siteConfig.name} Logo`}
+                width={28}
+                height={28}
+                className="object-contain transition-transform group-hover:scale-105"
               />
               <span className="font-heading font-black text-lg text-brandText-dark tracking-tight group-hover:text-brandRed transition-colors">
                 {siteConfig.name}
@@ -271,14 +270,14 @@ export default function Header({ sticky = true }: { sticky?: boolean } = {}) {
             <h3 className="text-lg font-bold text-brandText-dark font-heading mb-2">Confirm Logout</h3>
             <p className="text-sm text-brandText-medium mb-6 font-light">Are you sure you want to log out of your account?</p>
             <div className="flex space-x-3">
-              <button 
+              <button
                 onClick={() => setShowLogoutModal(false)}
                 className="flex-1 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-brandText-dark font-bold text-xs rounded-btn transition-colors uppercase tracking-wider"
               >
                 Cancel
               </button>
               <form action={logout} className="flex-1">
-                <button 
+                <button
                   type="submit"
                   className="w-full px-4 py-2.5 bg-brandRed hover:bg-brandRed-hover text-white font-bold text-xs rounded-btn transition-colors uppercase tracking-wider"
                 >

@@ -123,6 +123,27 @@ export default function DashboardClient({
   const [chatInput, setChatInput] = useState("");
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
+  // Checkout notifications
+  const [showCheckoutSuccess, setShowCheckoutSuccess] = useState(false);
+  const [showCheckoutCancel, setShowCheckoutCancel] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("checkout_success") === "true") {
+        setShowCheckoutSuccess(true);
+        setActiveTab("billing");
+        // Clear params so it doesn't show again on refresh
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+      if (params.get("checkout_cancel") === "true") {
+        setShowCheckoutCancel(true);
+        setActiveTab("billing");
+        window.history.replaceState(null, "", window.location.pathname);
+      }
+    }
+  }, []);
+
   const supabase = useMemo(() => createClient(), []);
 
   // Load details for selected business
@@ -841,6 +862,33 @@ export default function DashboardClient({
                     You have been granted soft-claim access to edit details immediately. Full verification will be finalized by admin review.
                   </p>
                 </div>
+              </div>
+            )}
+
+            {/* Checkout Alerts */}
+            {showCheckoutSuccess && (
+              <div className="p-4 bg-emerald-50 border border-emerald-100 rounded-2xl flex items-center justify-between text-emerald-800 text-xs shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle className="h-5 w-5 text-emerald-600 flex-shrink-0" />
+                  <div>
+                    <span className="font-bold block">Payment successful!</span>
+                    <span className="font-light">Your upgrade is being processed. It may take a minute to reflect on your account.</span>
+                  </div>
+                </div>
+                <button onClick={() => setShowCheckoutSuccess(false)} className="text-emerald-600 font-bold hover:text-emerald-950 text-xl leading-none">&times;</button>
+              </div>
+            )}
+
+            {showCheckoutCancel && (
+              <div className="p-4 bg-amber-50 border border-amber-100 rounded-2xl flex items-center justify-between text-amber-800 text-xs shadow-sm">
+                <div className="flex items-center space-x-3">
+                  <ShieldAlert className="h-5 w-5 text-amber-600 flex-shrink-0" />
+                  <div>
+                    <span className="font-bold block">Checkout Cancelled</span>
+                    <span className="font-light">Your payment was cancelled and no changes were made to your plan.</span>
+                  </div>
+                </div>
+                <button onClick={() => setShowCheckoutCancel(false)} className="text-amber-600 font-bold hover:text-amber-950 text-xl leading-none">&times;</button>
               </div>
             )}
 

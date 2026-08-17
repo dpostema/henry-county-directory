@@ -39,7 +39,7 @@ export async function POST() {
         email: bus.email || undefined,
         phone: bus.phone || undefined,
         address1: bus.address || undefined,
-        tags: ["unclaimed-listing", "henry-county-directory"],
+        tags: ["unclaimed-listing", "directory-template"],
         locationId: ghlLocationId,
       };
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import { createClient } from "@/utils/supabase/server";
+import { siteConfig } from "@/config/site";
 
 export async function POST() {
   try {
@@ -79,7 +80,7 @@ export async function POST() {
         phone: "(770) 555-0210",
         email: "info@mcdonoughdental.com",
         website: "https://mcdonoughdental.com",
-        description: "Premier dental clinic offering comprehensive oral healthcare, teeth whitening, clear aligners, and family dentistry in Henry County.",
+        description: "Premier dental clinic offering comprehensive oral healthcare, teeth whitening, clear aligners, and family dentistry in ${siteConfig.region.name}.",
         verification_level: "verified",
         status: "claimed",
         plan_tier: "pro",
@@ -160,7 +161,7 @@ export async function POST() {
         review_count: 31,
       },
       {
-        name: "Henry County Day Spa & Wellness",
+        name: "${siteConfig.region.name} Day Spa & Wellness",
         slug: "henry-county-day-spa-wellness",
         owner_id: ownerId || null,
         category_id: catMap.get("beauty-spa"),

@@ -696,7 +696,7 @@ export default function DashboardClient({
               <Link href="/" className="flex-shrink-0">
                 <Image 
                   src="/logo.svg" 
-                  alt="Henry County Directory Logo" 
+                  alt="${siteConfig.name} Logo" 
                   width={36} 
                   height={36} 
                   className="object-contain transition-transform hover:scale-105" 
@@ -2064,7 +2064,7 @@ export default function DashboardClient({
                 {userProfile?.full_name || "Ginette Sarclay"}
               </h3>
               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                {activeBusiness?.city?.name ? `${activeBusiness.city.name}, GA` : "Henry County, GA"}
+                {activeBusiness?.city?.name ? `${activeBusiness.city.name}, GA` : "${siteConfig.region.name}, GA"}
               </p>
             </div>
 

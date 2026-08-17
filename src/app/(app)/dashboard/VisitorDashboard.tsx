@@ -407,7 +407,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
               <Link href="/" className="flex-shrink-0">
                 <Image 
                   src="/logo.svg" 
-                  alt="Henry County Directory Logo" 
+                  alt="${siteConfig.name} Logo" 
                   width={36} 
                   height={36} 
                   className="object-contain transition-transform hover:scale-105" 
@@ -520,7 +520,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                   {userProfile?.full_name || "Community Member"}
                 </h3>
                 <p className="text-xs text-slate-500 font-medium mt-0.5">
-                  Henry County, GA
+                  ${siteConfig.region.name}, GA
                 </p>
               </div>
 
@@ -623,7 +623,7 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
             
             <div className="p-6 text-center">
               <h3 className="text-xl font-bold font-heading text-brandText-dark mb-2">
-                Welcome to Henry County Directory!
+                Welcome to ${siteConfig.name}!
               </h3>
               <p className="text-sm text-brandText-medium font-light mb-6">
                 We&apos;re excited to have you here. You can save your favorite local spots, leave reviews, and help the community grow.

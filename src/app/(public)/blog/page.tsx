@@ -23,7 +23,7 @@ export default async function BlogIndexPage() {
   const mockArticles = [
     {
       id: "b1",
-      title: "Top 5 Places to Visit in Henry County this Summer",
+      title: "Top 5 Places to Visit in ${siteConfig.region.name} this Summer",
       slug: "top-5-places-summer",
       excerpt: "Get ready for a sun-filled adventure. Here are our top picks for family fun in the area.",
       created_at: new Date().toISOString(),
@@ -54,7 +54,7 @@ export default async function BlogIndexPage() {
             <span className="font-normal text-brandText-medium">&amp; Guides</span>
           </h1>
           <p className="text-sm text-brandText-light font-light max-w-xl mx-auto leading-relaxed">
-            Discover the latest updates, tips, and spotlight stories on the businesses and community of Henry County.
+            Discover the latest updates, tips, and spotlight stories on the businesses and community of ${siteConfig.region.name}.
           </p>
         </div>
       </section>

@@ -88,7 +88,7 @@ export async function optInDigestAction(email: string, categories: string[]) {
     `)
   });
 
-  return { success: "You have successfully subscribed to our weekly Henry County digest!" };
+  return { success: "You have successfully subscribed to our weekly ${siteConfig.region.name} digest!" };
 }
 
 export async function createCuratedListAction(

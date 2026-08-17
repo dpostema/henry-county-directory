@@ -12,6 +12,7 @@ import { toggleFavoriteAction, checkFavoriteStatus, createBookingAction } from "
 import { hasFeatureAccess } from "@/utils/featureGate";
 import { getEntitlements } from "@/utils/entitlements";
 import Map from "@/components/Map";
+import { siteConfig } from "@/config/site";
 
 interface ListingDetailClientProps {
   business: any;
@@ -279,7 +280,7 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
                     {business.category?.name || "Local Listing"}
                   </span>
                   <span className="hidden sm:inline">&bull;</span>
-                  <span className="flex items-center whitespace-nowrap"><MapPin className="h-3.5 w-3.5 mr-1" /> {business.city?.name || "Henry County"}, GA</span>
+                  <span className="flex items-center whitespace-nowrap"><MapPin className="h-3.5 w-3.5 mr-1" /> {business.city?.name || siteConfig.region.name}, GA</span>
                 </div>
               </div>
 

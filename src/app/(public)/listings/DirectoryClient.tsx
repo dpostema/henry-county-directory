@@ -12,6 +12,7 @@ import {
   Utensils, Hotel, Briefcase, HeartPulse, Wrench, ShoppingBag, Car,
   Search, MapPin, SlidersHorizontal, ChevronRight, Filter, Star, Clock, Heart, Check, Building2, ChevronDown } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { siteConfig } from "@/config/site";
 
 // Categories
 const CATEGORIES = [
@@ -73,7 +74,7 @@ export default function DirectoryClient({ initialListings }: { initialListings?:
               Explore the Directory
             </h1>
             <p className="text-brandText-light font-light">
-              Find the best businesses, services, and places in Henry County.
+              Find the best businesses, services, and places in ${siteConfig.region.name}.
             </p>
           </div>
 

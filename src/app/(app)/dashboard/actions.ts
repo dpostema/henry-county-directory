@@ -377,7 +377,7 @@ export async function generateAIDescriptionAction(name: string, category: string
   if (!apiKey) {
     // Graceful fallback description
     return {
-      description: `Welcome to ${name}! We are proud to serve the Henry County community with high-quality ${category || "local directory"} services. Our dedicated team is committed to providing outstanding results, custom support, and a premium experience. Call or visit us today to learn more about how we can serve you!`,
+      description: `Welcome to ${name}! We are proud to serve the ${siteConfig.region.name} community with high-quality ${category || "local directory"} services. Our dedicated team is committed to providing outstanding results, custom support, and a premium experience. Call or visit us today to learn more about how we can serve you!`,
     };
   }
 
@@ -401,7 +401,7 @@ export async function generateAIReviewReplyAction(rating: number, comment: strin
   }
 
   try {
-    const prompt = `Write a short, professional, and appreciative response to a customer's ${rating}-star review that says: "${comment || "No comment left."}". Make it warm, authentic, and thank them for supporting local Henry County business.`;
+    const prompt = `Write a short, professional, and appreciative response to a customer's ${rating}-star review that says: "${comment || "No comment left."}". Make it warm, authentic, and thank them for supporting local ${siteConfig.region.name} business.`;
     const text = await callOpenAI(prompt, "You are a friendly customer success assistant representing a local business owner.");
     return { reply: text };
   } catch (err: any) {

@@ -36,7 +36,7 @@ export default async function EventsCalendarPage() {
           <div className="border-b border-brandBorder-light pb-6">
             <h1 className="text-3xl font-extrabold text-brandText-dark font-heading tracking-tight flex items-center space-x-2">
               <Calendar className="h-7 w-7 text-brandRed" />
-              <span>Henry County Events Calendar</span>
+              <span>{siteConfig.region.name} Events Calendar</span>
             </h1>
             <p className="text-sm text-brandText-light mt-1 font-light">
               Check out local happenings, live music sessions, sales events, and social gatherings.

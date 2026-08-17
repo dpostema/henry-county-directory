@@ -2,6 +2,7 @@
 import { NextResponse } from "next/server";
 import { createClient as createServerClient } from "@/utils/supabase/server";
 import { createClient as createDirectClient } from "@supabase/supabase-js";
+import { siteConfig } from "@/config/site";
 
 // Helper to initialize direct admin/service client if key is present, fallback to standard server client
 async function getSupabaseClient() {
@@ -86,7 +87,7 @@ function guessCategory(name: string, description: string): string {
   return "services"; // default fallback
 }
 
-// Henry County Geocode reference centers
+// ${siteConfig.region.name} Geocode reference centers
 const CITY_COORDINATES: Record<string, { lat: number; lon: number }> = {
   mcdonough: { lat: 33.4473, lon: -84.1469 },
   stockbridge: { lat: 33.5443, lon: -84.2339 },

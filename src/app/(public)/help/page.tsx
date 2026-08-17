@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { siteConfig } from "@/config/site";
 
 export default function HelpPage() {
   return (
@@ -33,7 +34,7 @@ export default function HelpPage() {
                 How do I contact support?
               </summary>
               <p className="mt-2 text-sm text-brandText-medium font-light leading-relaxed">
-                If you have an urgent inquiry or billing question, you can reach out to our dedicated support team at <strong>support@henrycountydirectory.com</strong> or call us at 770-555-0199.
+                If you have an urgent inquiry or billing question, you can reach out to our dedicated support team at <strong>${siteConfig.contactEmail}</strong> or call us at 770-555-0199.
               </p>
             </details>
           </div>

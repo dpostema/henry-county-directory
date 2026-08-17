@@ -40,7 +40,7 @@ export default async function DealsFeedPage() {
               <span>Local Deals & Coupons</span>
             </h1>
             <p className="text-sm text-brandText-light mt-1 font-light">
-              Save big at your favorite Henry County dining, shopping, and service businesses.
+              Save big at your favorite ${siteConfig.region.name} dining, shopping, and service businesses.
             </p>
           </div>
 

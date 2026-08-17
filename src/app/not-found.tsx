@@ -4,6 +4,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Search, MapPin, ArrowRight } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function NotFound() {
   return (
@@ -25,7 +26,7 @@ export default function NotFound() {
               className="flex items-center justify-center gap-2 w-full bg-brandRed hover:bg-brandRed-hover text-white py-3 px-6 rounded-full font-bold text-sm transition-colors shadow-sm"
             >
               <Search className="w-4 h-4" />
-              Search Henry County
+              Search ${siteConfig.region.name}
             </Link>
             <Link
               href="/category/foods"

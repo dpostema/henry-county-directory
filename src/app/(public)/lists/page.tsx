@@ -9,6 +9,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { createCuratedListAction } from "../listings/actions";
 import { Plus, Sparkles, User, Star } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function CuratedListsPage() {
   const [lists, setLists] = useState<any[]>([]);
@@ -129,7 +130,7 @@ export default function CuratedListsPage() {
                 <span>Curated &ldquo;Best Of&rdquo; Lists</span>
               </h1>
               <p className="text-sm text-brandText-light mt-1 font-light">
-                Discover local favorites compiled by residents and administrators of Henry County.
+                Discover local favorites compiled by residents and administrators of ${siteConfig.region.name}.
               </p>
             </div>
 

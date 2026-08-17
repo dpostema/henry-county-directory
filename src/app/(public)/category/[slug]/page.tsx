@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 
 import { Metadata } from "next";
+import { siteConfig } from "@/config/site";
 
 
 
@@ -23,8 +24,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { data: category } = await supabase.from("categories").select("name").eq("slug", slug).maybeSingle();
   const categoryTitle = category?.name || `${slug.charAt(0).toUpperCase()}${slug.slice(1)}`;
   return {
-    title: `Best ${categoryTitle} in Henry County, GA | Directory`,
-    description: `Discover top-rated ${categoryTitle.toLowerCase()} and related local businesses in Henry County, Georgia.`,
+    title: `Best ${categoryTitle} in ${siteConfig.region.name}, GA | Directory`,
+    description: `Discover top-rated ${categoryTitle.toLowerCase()} and related local businesses in ${siteConfig.region.name}, Georgia.`,
   };
 }
 

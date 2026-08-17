@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SupabaseClient } from "@supabase/supabase-js";
+import { siteConfig } from "@/config/site";
 
 export interface SearchParams {
   query?: string;
@@ -131,7 +132,7 @@ export function isBusinessOpenNow(hoursJson: any): boolean {
   try {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const now = new Date();
-    // Henry County, Georgia operates on Eastern Time (EST/EDT)
+    // ${siteConfig.region.name}, Georgia operates on Eastern Time (EST/EDT)
     const easternTime = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
     const currentDay = days[easternTime.getDay()];
     const hours = hoursJson[currentDay];

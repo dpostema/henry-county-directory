@@ -108,7 +108,7 @@ export default async function BestOfPage({ params }: PageProps) {
               </h1>
             </div>
             <p className="text-sm text-brandText-light font-light mt-2 max-w-3xl">
-              {dbList?.description || `Explore our curated list of the top-rated businesses for ${listTitle} in Henry County. Support local favorites and discover new gems.`}
+              {dbList?.description || `Explore our curated list of the top-rated businesses for ${listTitle} in ${siteConfig.region.name}. Support local favorites and discover new gems.`}
             </p>
           </div>
 

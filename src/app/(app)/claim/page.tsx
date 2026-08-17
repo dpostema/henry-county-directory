@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Search, MapPin, Building2, CheckCircle } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export default function ClaimSearchPage() {
   const [query, setQuery] = useState("");
@@ -116,7 +117,7 @@ export default function ClaimSearchPage() {
                         <p className="text-xs text-brandText-light truncate flex items-center">
                           <MapPin className="h-3 w-3 mr-1 flex-shrink-0" />
                           <span>
-                            {bus.address || "No address listed"} &bull; {bus.city?.name || "Henry County"}, GA
+                            {bus.address || "No address listed"} &bull; {bus.city?.name || siteConfig.region.name}, GA
                           </span>
                         </p>
                       </div>

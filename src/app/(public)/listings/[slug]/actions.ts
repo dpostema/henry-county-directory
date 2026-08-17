@@ -9,6 +9,7 @@ import { checkRateLimit } from "@/utils/rateLimit";
 import { callOpenAI } from "@/utils/ai";
 import { sendEmail } from "@/utils/email";
 import { generateEmailHtml } from "@/utils/email-template";
+import { siteConfig } from "@/config/site";
 
 export async function submitLead(formData: FormData) {
   const headersList = await headers();
@@ -110,7 +111,7 @@ export async function submitLead(formData: FormData) {
             name,
             email,
             phone: phone || undefined,
-            tags: ["lead-submission", "henry-county-directory"],
+            tags: ["lead-submission", "directory-template"],
             locationId: ghlLocationId,
           }),
         });
@@ -133,7 +134,7 @@ export async function submitLead(formData: FormData) {
       await sendEmail({
         to: business.email,
         subject: `New Lead for ${business.name}: ${aiTag}`,
-        html: generateEmailHtml("Henry County Directory", `
+        html: generateEmailHtml(siteConfig.name, `
           <h3>You have a new lead!</h3>
           <p>Someone reached out to your business from your directory listing.</p>
           <div class="box">
@@ -206,7 +207,7 @@ export async function submitReview(formData: FormData) {
       await sendEmail({
         to: business.email,
         subject: `New Review for ${business.name}`,
-        html: generateEmailHtml("Henry County Directory", `
+        html: generateEmailHtml(siteConfig.name, `
           <h3>You received a new ${rating}-star review!</h3>
           <p>Someone recently left a review on your directory listing.</p>
           <div class="box">
@@ -271,7 +272,7 @@ export async function submitQuestion(formData: FormData) {
       await sendEmail({
         to: business.email,
         subject: `New Question for ${business.name}`,
-        html: generateEmailHtml("Henry County Directory", `
+        html: generateEmailHtml(siteConfig.name, `
           <h3>Someone asked a question on your listing!</h3>
           <p>A visitor is looking for more information about your business.</p>
           <div class="box">

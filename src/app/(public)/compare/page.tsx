@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Scale, Trash, Star, Phone, Globe, MapPin, ExternalLink } from "lucide-react";
 import { fetchCompareBusinesses } from "./actions";
+import { siteConfig } from "@/config/site";
 
 export default function CompareListingsPage() {
   const [compareIds, setCompareIds] = useState<string[]>([]);
@@ -111,7 +112,7 @@ export default function CompareListingsPage() {
                 <span>Compare Listings</span>
               </h1>
               <p className="text-sm text-brandText-light mt-1 font-light">
-                Compare key attributes of local Henry County businesses side-by-side.
+                Compare key attributes of local ${siteConfig.region.name} businesses side-by-side.
               </p>
             </div>
 
@@ -181,7 +182,7 @@ export default function CompareListingsPage() {
                     <td className="p-4 font-semibold text-brandText-medium">City Location</td>
                     {businesses.map((bus) => (
                       <td key={bus.id} className="p-4 text-brandText-dark">
-                        {bus.city?.name || "Henry County"}, GA
+                        {bus.city?.name || siteConfig.region.name}, GA
                       </td>
                     ))}
                   </tr>

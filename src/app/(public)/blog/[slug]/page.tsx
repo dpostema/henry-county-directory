@@ -51,10 +51,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   const mockArticles = [
     {
       id: "b1",
-      title: "Top 5 Places to Visit in Henry County this Summer",
+      title: "Top 5 Places to Visit in ${siteConfig.region.name} this Summer",
       slug: "top-5-places-summer",
       excerpt: "Get ready for a sun-filled adventure. Here are our top picks for family fun in the area.",
-      content: "<p>Summer is almost here, and Henry County is full of incredible places to explore with your family. Here is a curated list of our top 5 destinations.</p><p>1. Local Park... (This is mock content for demonstration)</p>",
+      content: "<p>Summer is almost here, and ${siteConfig.region.name} is full of incredible places to explore with your family. Here is a curated list of our top 5 destinations.</p><p>1. Local Park... (This is mock content for demonstration)</p>",
       created_at: new Date().toISOString(),
       cover_image_url: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=1000&auto=format&fit=crop&q=60"
     },

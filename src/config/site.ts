@@ -14,7 +14,8 @@ export const siteConfig = {
   // Regional Defaults
   region: {
     name: "Henry County",
-    state: "GA"
+    state: "GA",
+    timeZone: "America/New_York"
   },
 
   // Homepage Hero

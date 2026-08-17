@@ -132,9 +132,9 @@ export function isBusinessOpenNow(hoursJson: any): boolean {
   try {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const now = new Date();
-    // ${siteConfig.region.name}, Georgia operates on Eastern Time (EST/EDT)
-    const easternTime = new Date(now.toLocaleString("en-US", { timeZone: "America/New_York" }));
-    const currentDay = days[easternTime.getDay()];
+    // The region operates on a specific Time Zone
+    const localTime = new Date(now.toLocaleString("en-US", { timeZone: siteConfig.region.timeZone }));
+    const currentDay = days[localTime.getDay()];
     const hours = hoursJson[currentDay];
 
     if (!hours || hours.closed || !hours.open || !hours.close) {
@@ -144,10 +144,10 @@ export function isBusinessOpenNow(hoursJson: any): boolean {
     const [openH, openM] = hours.open.split(":").map(Number);
     const [closeH, closeM] = hours.close.split(":").map(Number);
 
-    const openTime = new Date(easternTime);
+    const openTime = new Date(localTime);
     openTime.setHours(openH, openM, 0, 0);
 
-    const closeTime = new Date(easternTime);
+    const closeTime = new Date(localTime);
     closeTime.setHours(closeH, closeM, 0, 0);
 
     // Handle overnight operation (e.g. 22:00 to 02:00)
@@ -155,7 +155,7 @@ export function isBusinessOpenNow(hoursJson: any): boolean {
       closeTime.setDate(closeTime.getDate() + 1);
     }
 
-    return easternTime >= openTime && easternTime <= closeTime;
+    return localTime >= openTime && localTime <= closeTime;
   } catch (err) {
     console.error("Failed to parse operational status:", err);
     return false;

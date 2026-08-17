@@ -12,34 +12,27 @@ import Footer from "@/components/Footer";
 import ListingCard from "@/components/ListingCard";
 import { searchBusinesses } from "@/services/search";
 import {
-  Utensils, Hotel, Briefcase, HeartPulse, Wrench, ShoppingBag, Car,
   Search, ChevronLeft, ChevronRight, ArrowRight
 , ChevronDown } from "lucide-react";
-
-// Categories
-const CATEGORIES = [
-  { name: "Foods", slug: "foods", icon: Utensils },
-  { name: "Hotels", slug: "hotels", icon: Hotel },
-  { name: "Jobs", slug: "jobs", icon: Briefcase },
-  { name: "Medicals", slug: "medicals", icon: HeartPulse },
-  { name: "Services", slug: "services", icon: Wrench },
-  { name: "Shopping", slug: "shopping", icon: ShoppingBag },
-  { name: "Automotive", slug: "automotive", icon: Car }
-];
-
-// Destinations
-const DESTINATIONS = [
-  { name: "McDonough", slug: "mcdonough", count: 20, image: "/mcDonough.png" },
-  { name: "Stockbridge", slug: "stockbridge", count: 6, image: "/stockbridge-ga.avif" },
-  { name: "Hampton", slug: "hampton", count: 12, image: "/hampton.jpg" },
-  { name: "Locust Grove", slug: "locust-grove", count: 4, image: "/locustgrove.jpg" },
-  { name: "Flippen", slug: "flippen", count: 0, image: "/flippen.png" },
-  { name: "Blacksville", slug: "blacksville", count: 0, image: "/blacksville.png" }
-];
+import * as lucideIcons from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 
 
-export default function HomeClient({ initialListings }: { initialListings?: any[] }) {
+export default function HomeClient({ 
+  initialListings,
+  dbCategories,
+  dbCities,
+  dbArticles
+}: { 
+  initialListings?: any[],
+  dbCategories?: any[],
+  dbCities?: any[],
+  dbArticles?: any[]
+}) {
+  const categories = dbCategories && dbCategories.length > 0 ? dbCategories : siteConfig.categories;
+  const cities = dbCities && dbCities.length > 0 ? dbCities : siteConfig.destinations;
+  const articles = dbArticles && dbArticles.length > 0 ? dbArticles : siteConfig.articles;
   const [listings, setListings] = useState<any[]>(initialListings || []);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("all");
@@ -60,11 +53,11 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
   }, [initialListings]);
 
   const dynamicDestinations = useMemo(() => {
-    return DESTINATIONS.map(d => ({
+    return cities.map(d => ({
       ...d,
       count: destinationCounts[d.slug] || 0
     }));
-  }, [destinationCounts]);
+  }, [cities, destinationCounts]);
 
   const isFirstRender = useRef(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -140,10 +133,10 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
         <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center text-center mt-10">
           <span className="font-serif text-3xl sm:text-4xl text-white mb-2 italic tracking-wide">explore</span>
           <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-bold text-white leading-tight tracking-tight mb-4 drop-shadow-sm">
-            Discover the Best Spots
+            {siteConfig.hero.title}
           </h1>
           <p className="text-base sm:text-lg text-white/90 font-medium mb-10 drop-shadow-sm">
-            Find the best places by clicking below
+            {siteConfig.hero.subtitle}
           </p>
 
           {/* Search Card */}
@@ -153,7 +146,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
               <input
                 suppressHydrationWarning
                 type="text"
-                placeholder="What are you looking for?"
+                placeholder={siteConfig.hero.searchPlaceholder}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-transparent text-sm text-brandText-dark focus:outline-none placeholder-brandText-light font-medium"
@@ -169,12 +162,9 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Cities</SelectItem>
-                  <SelectItem value="mcdonough">McDonough</SelectItem>
-                  <SelectItem value="stockbridge">Stockbridge</SelectItem>
-                  <SelectItem value="hampton">Hampton</SelectItem>
-                  <SelectItem value="locust-grove">Locust Grove</SelectItem>
-                  <SelectItem value="flippen">Flippen</SelectItem>
-                  <SelectItem value="blacksville">Blacksville</SelectItem>
+                  {cities.map(d => (
+                    <SelectItem key={d.slug} value={d.slug}>{d.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -194,8 +184,8 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
           <div className="mt-12 text-center w-full max-w-2xl">
             <p className="text-sm text-white/90 mb-5 font-semibold drop-shadow-sm">Or browse the highlights</p>
             <div className="flex flex-wrap justify-center gap-4">
-              {CATEGORIES.map((cat) => {
-                const IconComp = cat.icon;
+              {categories.map((cat) => {
+                const IconComp = (lucideIcons as any)[cat.iconName || cat.icon] || lucideIcons.Box;
                 const isActive = activeCategory === cat.slug;
                 return (
                   <button
@@ -229,23 +219,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                num: "1",
-                title: "Choose What To Do",
-                desc: "Looking for a cozy hotel to stay, a restaurant to eat, a museum to visit or a mall to do some shopping?"
-              },
-              {
-                num: "2",
-                title: "Find What You Want",
-                desc: "Search and filter hundreds of listings, read reviews, explore photos and find the perfect spot."
-              },
-              {
-                num: "3",
-                title: "Explore Amazing Places",
-                desc: "Go and have a good time or even make a booking directly from the listing page. All of those, thanks to HenryCountyDirectory."
-              }
-            ].map((step) => (
+            {siteConfig.howItWorks.map((step) => (
               <div key={step.num} className="relative p-6 flex items-start gap-5">
                 <span className="text-6xl font-black text-slate-100 select-none pointer-events-none leading-none -mt-2">
                   {step.num}
@@ -380,29 +354,7 @@ export default function HomeClient({ initialListings }: { initialListings?: any[
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                tag: "Tips, Travel",
-                title: "Top 10 Restaurants In Henry County You Must Try",
-                date: "Aug 28th, 2026",
-                author: "Admin",
-                image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500&auto=format&fit=crop&q=60"
-              },
-              {
-                tag: "Culture",
-                title: "Best Local Events Happening This Fall Season",
-                date: "Aug 20th, 2026",
-                author: "HCD Team",
-                image: "https://upload.wikimedia.org/wikipedia/commons/3/32/Googleplex_HQ_%28cropped%29.jpg"
-              },
-              {
-                tag: "Location",
-                title: "Hidden Gems: Coffee Shops In Downtown McDonough",
-                date: "Aug 15th, 2026",
-                author: "Staff Writer",
-                image: "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=500&auto=format&fit=crop&q=60"
-              }
-            ].map((article) => (
+            {articles.map((article) => (
               <article key={article.title} className="group overflow-hidden rounded-xl border border-brandBorder-light hover:shadow-md transition-all duration-300 bg-white">
                 <div className="aspect-[16/10] overflow-hidden bg-slate-100">
                   <Image

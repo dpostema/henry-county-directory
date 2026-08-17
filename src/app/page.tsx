@@ -10,5 +10,20 @@ export default async function Homepage() {
   // Fetch initial un-filtered listings for the home page (e.g. top 20 or popular)
   const initialListings = await searchBusinesses(supabase, {});
 
-  return <HomeClient initialListings={initialListings} />;
+  // Fetch dynamic sections
+  const { data: dbCategories } = await supabase.from('categories').select('*');
+  const { data: dbCities } = await supabase.from('cities').select('*');
+  const { data: dbArticles } = await supabase.from('articles')
+    .select('id, title, slug, excerpt, created_at, cover_image_url')
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  return (
+    <HomeClient 
+      initialListings={initialListings} 
+      dbCategories={dbCategories || undefined}
+      dbCities={dbCities || undefined}
+      dbArticles={dbArticles || undefined}
+    />
+  );
 }

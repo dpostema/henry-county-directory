@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Star, Heart, MapPin, CheckCircle, Eye } from "lucide-react";
 import { isBusinessOpenNow } from "@/services/search";
+import { siteConfig } from "@/config/site";
 
 interface ListingCardProps {
   business: {
@@ -37,6 +38,9 @@ interface ListingCardProps {
     media?: Array<{
       url: string;
     }>;
+    owner?: {
+      avatar_url?: string;
+    };
   };
 }
 
@@ -126,7 +130,7 @@ export default function ListingCard({ business }: ListingCardProps) {
         <div className="absolute -top-5 left-4 h-10 w-10 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={`https://api.dicebear.com/7.x/initials/svg?seed=${business.name}`}
+            src={business.owner?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${business.name}`}
             alt="Owner"
             className="h-full w-full object-cover"
             loading="lazy"
@@ -168,7 +172,7 @@ export default function ListingCard({ business }: ListingCardProps) {
         <div className="flex items-center justify-between text-[11px]">
           <div className="flex items-center text-brandText-light space-x-1">
             <MapPin className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate max-w-[100px]">{business.city?.name || "Henry County"}, GA</span>
+            <span className="truncate max-w-[100px]">{business.city?.name || siteConfig.region.name}, {business.city?.state || siteConfig.region.state}</span>
           </div>
           <span className={`font-bold ${isOpen ? "text-badge-verified" : "text-brandRed"}`}>
             {isOpen ? "Open Now!" : "Closed Now!"}

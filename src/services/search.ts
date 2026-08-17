@@ -35,7 +35,8 @@ export async function searchBusinesses(supabase: SupabaseClient, params: SearchP
       review_count,
       category:categories(name, slug, icon),
       city:cities(name, slug, state),
-      media:listing_media(url)
+      media:listing_media(url),
+      owner:profiles(avatar_url)
     `)
     .neq("status", "suspended");
 

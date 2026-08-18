@@ -16,10 +16,10 @@ import { siteConfig } from "@/config/site";
 
 // Categories
 const CATEGORIES = [
-  { name: "Foods", slug: "foods", icon: Utensils },
+  { name: "Food", slug: "foods", icon: Utensils },
   { name: "Hotels", slug: "hotels", icon: Hotel },
   { name: "Jobs", slug: "jobs", icon: Briefcase },
-  { name: "Medicals", slug: "medicals", icon: HeartPulse },
+  { name: "Medical", slug: "medicals", icon: HeartPulse },
   { name: "Services", slug: "services", icon: Wrench },
   { name: "Shopping", slug: "shopping", icon: ShoppingBag },
   { name: "Automotive", slug: "automotive", icon: Car }

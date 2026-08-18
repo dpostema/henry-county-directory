@@ -79,6 +79,16 @@ export async function signup(formData: FormData) {
   }
 
   if (data?.session) {
+    // Fire GHL webhook
+    const { dispatchGhlWebhook } = await import("@/services/ghl");
+    await dispatchGhlWebhook({
+      email,
+      name: fullName,
+      event: "directory-signup",
+      source: "User Signup",
+      tags: ["directory-signup"]
+    });
+
     revalidatePath("/", "layout");
     redirect("/dashboard");
   }

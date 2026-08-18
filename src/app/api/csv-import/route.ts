@@ -205,7 +205,6 @@ export async function POST(req: Request) {
         continue;
       }
 
-      // If duplicate detected, flag it
       if (dups && dups.length > 0 && newBus) {
         duplicateCount++;
         await supabase.from("duplicate_flags").insert({
@@ -213,6 +212,17 @@ export async function POST(req: Request) {
           business_b_id: newBus.id,
           confidence_score: 0.9,
           status: "pending",
+        });
+      } else {
+        // Fire GHL webhook for successfully imported unclaimed business
+        const { dispatchGhlWebhook } = await import("@/services/ghl");
+        dispatchGhlWebhook({
+          email,
+          name,
+          phone,
+          event: "unclaimed-listing",
+          source: "CSV Import",
+          tags: ["unclaimed-listing"]
         });
       }
 

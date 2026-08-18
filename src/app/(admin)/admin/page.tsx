@@ -68,9 +68,9 @@ type AdminTab =
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const SAMPLE_CSV = `name,address,phone,email,website,description,category,city
-McDonough Dental Care,125 Sabot Way McDonough GA,770-555-0210,info@mcdonoughdental.com,https://mcdonoughdental.com,Professional dental clinic offering standard checkups scaling implants and family oral care.,Medicals,McDonough
+McDonough Dental Care,125 Sabot Way McDonough GA,770-555-0210,info@mcdonoughdental.com,https://mcdonoughdental.com,Professional dental clinic offering standard checkups scaling implants and family oral care.,Medical,McDonough
 Stockbridge Auto Repair,480 North Henry Blvd Stockbridge GA,770-555-0220,service@stockbridgeauto.com,https://stockbridgeauto.com,Full service automotive workshop specializing in engine diagnostics brake services and tire installations.,Automotive,Stockbridge
-Hampton Coffee Depot,12 Cherry St Hampton GA,770-555-0230,hello@hamptoncoffee.com,https://hamptoncoffee.com,Cozy coffee shop offering hand-roasted coffee blends house-made pastries and quiet workspaces.,Foods,Hampton`;
+Hampton Coffee Depot,12 Cherry St Hampton GA,770-555-0230,hello@hamptoncoffee.com,https://hamptoncoffee.com,Cozy coffee shop offering hand-roasted coffee blends house-made pastries and quiet workspaces.,Food,Hampton`;
 
 const INITIAL_AB_TESTS = [
   { id: "featured_placement_v2", name: "Featured badge position: Above name vs. Top-right corner", enabled: false },

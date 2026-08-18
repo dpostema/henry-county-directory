@@ -6,9 +6,9 @@
 -- 1. SEED CATEGORIES
 INSERT INTO public.categories (id, name, slug, icon)
 VALUES
-  ('11111111-1111-4111-a111-111111111111', 'Medicals & Healthcare', 'medicals', 'Activity'),
+  ('11111111-1111-4111-a111-111111111111', 'Medical & Healthcare', 'medicals', 'Activity'),
   ('22222222-2222-4222-a222-222222222222', 'Automotive & Repair', 'automotive', 'Car'),
-  ('33333333-3333-4333-a333-333333333333', 'Foods & Dining', 'foods', 'Utensils'),
+  ('33333333-3333-4333-a333-333333333333', 'Food & Dining', 'foods', 'Utensils'),
   ('44444444-4444-4444-a444-444444444444', 'Home Services & Contracting', 'services', 'Home'),
   ('55555555-5555-4555-a555-555555555555', 'Professional & Legal Services', 'professional', 'Briefcase'),
   ('66666666-6666-4666-a666-666666666666', 'Beauty & Personal Care', 'beauty-spa', 'Sparkles'),

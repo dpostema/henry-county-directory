@@ -409,9 +409,9 @@ export async function seedDummyDataAdminAction() {
 
   // 1. Categories
   const categories = [
-    { name: "Medicals & Healthcare", slug: "medicals", icon: "Activity" },
+    { name: "Medical & Healthcare", slug: "medicals", icon: "Activity" },
     { name: "Automotive & Repair", slug: "automotive", icon: "Car" },
-    { name: "Foods & Dining", slug: "foods", icon: "Utensils" },
+    { name: "Food & Dining", slug: "foods", icon: "Utensils" },
     { name: "Home Services & Contracting", slug: "services", icon: "Home" },
     { name: "Professional & Legal Services", slug: "professional", icon: "Briefcase" },
     { name: "Beauty & Personal Care", slug: "beauty-spa", icon: "Sparkles" },

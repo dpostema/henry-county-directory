@@ -66,6 +66,20 @@ export async function POST(req: Request) {
 
         if (subErr) throw subErr;
 
+        // Fetch business details for webhook
+        const { data: bus } = await supabase.from("businesses").select("name, email, phone").eq("id", businessId).single();
+        if (bus) {
+          const { dispatchGhlWebhook } = await import("@/services/ghl");
+          await dispatchGhlWebhook({
+            email: bus.email,
+            name: bus.name,
+            phone: bus.phone,
+            event: "directory-subscribed",
+            source: "Stripe Webhook",
+            tags: ["directory-subscribed", `plan-${planTier}`]
+          });
+        }
+
         console.log(`[STRIPE WEBHOOK] Business ${businessId} upgraded to ${planTier}.`);
       } else if (addonType) {
         // Insert addon purchase details
@@ -119,6 +133,20 @@ export async function POST(req: Request) {
           .from("subscriptions")
           .update({ status: "cancelled" })
           .eq("stripe_subscription_id", subscriptionId);
+
+        // Fetch business details for webhook
+        const { data: bus } = await supabase.from("businesses").select("name, email, phone").eq("id", sub.business_id).single();
+        if (bus) {
+          const { dispatchGhlWebhook } = await import("@/services/ghl");
+          await dispatchGhlWebhook({
+            email: bus.email,
+            name: bus.name,
+            phone: bus.phone,
+            event: "directory-unsubscribed",
+            source: "Stripe Webhook",
+            tags: ["directory-unsubscribed"]
+          });
+        }
 
         console.log(`[STRIPE WEBHOOK] Subscription cancelled for business ${sub.business_id}.`);
       }

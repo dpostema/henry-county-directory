@@ -46,10 +46,10 @@ export const siteConfig = {
 
   // Default Categories (Icon names map to lucide-react in HomeClient)
   categories: [
-    { name: "Foods", slug: "foods", iconName: "Utensils" },
+    { name: "Food", slug: "foods", iconName: "Utensils" },
     { name: "Hotels", slug: "hotels", iconName: "Hotel" },
     { name: "Jobs", slug: "jobs", iconName: "Briefcase" },
-    { name: "Medicals", slug: "medicals", iconName: "HeartPulse" },
+    { name: "Medical", slug: "medicals", iconName: "HeartPulse" },
     { name: "Services", slug: "services", iconName: "Wrench" },
     { name: "Shopping", slug: "shopping", iconName: "ShoppingBag" },
     { name: "Automotive", slug: "automotive", iconName: "Car" }

@@ -183,7 +183,7 @@ export default function HomeClient({
           {/* Browse Highlights — Category Icons */}
           <div className="mt-12 text-center w-full max-w-2xl">
             <p className="text-sm text-white/90 mb-5 font-semibold drop-shadow-sm">Or browse the highlights</p>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4">
               {categories.map((cat) => {
                 const IconComp = (lucideIcons as any)[cat.iconName || cat.icon] || lucideIcons.Box;
                 const isActive = activeCategory === cat.slug;
@@ -192,14 +192,14 @@ export default function HomeClient({
                     suppressHydrationWarning
                     key={cat.slug}
                     onClick={() => setActiveCategory(isActive ? null : cat.slug)}
-                    className={`flex flex-col items-center justify-center w-16 h-16 rounded-lg transition-all duration-200 backdrop-blur-sm ${
+                    className={`flex flex-col items-center justify-center p-1 w-[72px] h-[72px] sm:w-20 sm:h-20 rounded-lg transition-all duration-200 backdrop-blur-sm ${
                       isActive
                         ? "bg-[#ff385c]/90 text-white shadow-lg -translate-y-1"
                         : "bg-black/40 text-white hover:bg-black/60 hover:-translate-y-1 border border-white/20"
                     }`}
                   >
-                    <IconComp className="h-6 w-6 mb-1.5 opacity-90" />
-                    <span className="text-[10px] font-semibold leading-tight tracking-wide">{cat.name}</span>
+                    <IconComp className="h-5 w-5 sm:h-6 sm:w-6 mb-1 opacity-90 flex-shrink-0" />
+                    <span className="text-[9px] sm:text-[10px] font-semibold leading-tight tracking-wide text-center w-full px-0.5 line-clamp-3">{cat.name}</span>
                   </button>
                 );
               })}

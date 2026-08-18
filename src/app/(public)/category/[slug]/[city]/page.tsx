@@ -8,10 +8,10 @@ import { Metadata } from "next";
 
 // Mock Categories
 const CATEGORY_NAMES: Record<string, string> = {
-  foods: "Foods & Restaurants",
+  foods: "Food & Restaurants",
   hotels: "Hotels & Lodges",
   jobs: "Local Jobs",
-  medicals: "Clinics & Medicals",
+  medicals: "Clinics & Medical",
   services: "Local Services",
   shopping: "Shops & Shopping",
   automotive: "Automotive Services",

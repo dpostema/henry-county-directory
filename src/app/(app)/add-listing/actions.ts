@@ -115,6 +115,17 @@ export async function createListingAction(formData: FormData) {
     return { error: error.message };
   }
 
+  // Fire GHL Webhook
+  const { dispatchGhlWebhook } = await import("@/services/ghl");
+  await dispatchGhlWebhook({
+    email: email || user.email,
+    name,
+    phone,
+    event: "directory-new-listing",
+    source: "User Add Listing",
+    tags: ["directory-new-listing"]
+  });
+
   revalidatePath("/dashboard");
   revalidatePath("/listings");
   redirect("/dashboard");

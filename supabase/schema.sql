@@ -635,10 +635,10 @@ CREATE POLICY "OTP codes are locked to the public" ON public.otp_codes
 
 -- Seed Categories
 INSERT INTO public.categories (name, slug, icon) VALUES
-('Foods', 'foods', 'Utensils'),
+('Food', 'foods', 'Utensils'),
 ('Hotels', 'hotels', 'Hotel'),
 ('Jobs', 'jobs', 'Briefcase'),
-('Medicals', 'medicals', 'HeartPulse'),
+('Medical', 'medicals', 'HeartPulse'),
 ('Services', 'services', 'Wrench'),
 ('Shopping', 'shopping', 'ShoppingBag'),
 ('Automotive', 'automotive', 'Car')

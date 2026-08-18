@@ -25,62 +25,37 @@ export async function POST() {
       });
     }
 
-    const ghlAccessToken = process.env.GHL_ACCESS_TOKEN;
-    const ghlLocationId = process.env.GHL_LOCATION_ID || "mock-location-id";
-    const isMock = !ghlAccessToken;
+    const webhookUrl = process.env.GHL_WEBHOOK_UNCLAIMED_LISTING;
+    const isMock = !webhookUrl;
 
     const syncedList: string[] = [];
     const errors: string[] = [];
 
-    for (const bus of businesses) {
-      const contactPayload = {
-        name: bus.name,
-        companyName: bus.name,
-        email: bus.email || undefined,
-        phone: bus.phone || undefined,
-        address1: bus.address || undefined,
-        tags: ["unclaimed-listing", "directory-template"],
-        locationId: ghlLocationId,
-      };
+    const { dispatchGhlWebhook } = await import("@/services/ghl");
 
+    for (const bus of businesses) {
       if (isMock) {
-        // Mock Mode: Simulates successful sync response
-        console.log(`[GHL SYNC MOCK] Synced Contact: ${bus.name} (Email: ${bus.email}) to Location: ${ghlLocationId}`);
+        // Mock Mode
+        console.log(`[GHL SYNC MOCK] Synced Contact: ${bus.name} (Email: ${bus.email})`);
         syncedList.push(`${bus.name} (Simulated Sync)`);
       } else {
-        // Real Mode: Calls the actual GoHighLevel V2 REST endpoint
-        try {
-          const res = await fetch("https://services.leadconnectorhq.com/contacts/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${ghlAccessToken}`,
-              Version: "2021-04-15",
-            },
-            body: JSON.stringify(contactPayload),
-          });
-
-          const resData = await res.json();
-
-          if (!res.ok) {
-            console.error(`[GHL SYNC ERROR] Code ${res.status}:`, resData);
-            errors.push(`${bus.name}: [GHL API Error] ${JSON.stringify(resData)}`);
-          } else {
-            console.log(`[GHL SYNC SUCCESS] Synced ${bus.name} with GHL Contact ID: ${resData.contact?.id}`);
-            syncedList.push(`${bus.name} (GHL ID: ${resData.contact?.id || "unknown"})`);
-          }
-        } catch (err: any) {
-          console.error(`[GHL SYNC HTTP EXCEPTION] ${bus.name}:`, err.message);
-          errors.push(`${bus.name}: [HTTP Exception] ${err.message}`);
-        }
+        await dispatchGhlWebhook({
+          email: bus.email || undefined,
+          name: bus.name,
+          phone: bus.phone || undefined,
+          event: "unclaimed-listing",
+          source: "Manual Batch Sync",
+          tags: ["unclaimed-listing", "directory-template"]
+        });
+        syncedList.push(`${bus.name} (Webhook Fired)`);
       }
     }
 
     return NextResponse.json({
       success: true,
       message: isMock
-        ? "Mock Sync complete (No GHL_ACCESS_TOKEN loaded). Listings logged to server console."
-        : "GoHighLevel contact synchronization completed.",
+        ? "Mock Sync complete (No GHL_WEBHOOK_UNCLAIMED_LISTING loaded). Listings logged to server console."
+        : "GoHighLevel contact synchronization webhooks fired.",
       syncedCount: syncedList.length,
       syncedList,
       errors,

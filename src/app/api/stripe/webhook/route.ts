@@ -107,6 +107,48 @@ export async function POST(req: Request) {
       }
     }
 
+    if (type === "customer.subscription.updated") {
+      const subscriptionId = session.id;
+      const { getTierForPrice } = await import("@/utils/stripe");
+      const priceId = session.items?.data?.[0]?.price?.id;
+      const newTier = priceId ? getTierForPrice(priceId) : null;
+      const periodEnd = session.current_period_end ? new Date(session.current_period_end * 1000).toISOString() : null;
+      const status = session.status;
+
+      const { data: sub } = await supabase
+        .from("subscriptions")
+        .select("business_id")
+        .eq("stripe_subscription_id", subscriptionId)
+        .single();
+
+      if (sub) {
+        const updates: any = {};
+        if (newTier) updates.plan_tier = newTier;
+        if (periodEnd) updates.current_period_end = periodEnd;
+        if (status) updates.status = status;
+
+        if (Object.keys(updates).length > 0) {
+          await supabase
+            .from("subscriptions")
+            .update(updates)
+            .eq("stripe_subscription_id", subscriptionId);
+        }
+
+        if (newTier) {
+          await supabase
+            .from("businesses")
+            .update({
+              plan_tier: newTier,
+              is_featured: ["featured", "pro", "enterprise"].includes(newTier),
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", sub.business_id);
+        }
+
+        console.log(`[STRIPE WEBHOOK] Subscription updated for business ${sub.business_id}.`);
+      }
+    }
+
     if (type === "customer.subscription.deleted") {
       const subscriptionId = session.id;
 

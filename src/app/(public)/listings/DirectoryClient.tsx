@@ -14,18 +14,10 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { siteConfig } from "@/config/site";
 
-// Categories
-const CATEGORIES = [
-  { name: "Food", slug: "foods", icon: Utensils },
-  { name: "Hotels", slug: "hotels", icon: Hotel },
-  { name: "Jobs", slug: "jobs", icon: Briefcase },
-  { name: "Medical", slug: "medicals", icon: HeartPulse },
-  { name: "Services", slug: "services", icon: Wrench },
-  { name: "Shopping", slug: "shopping", icon: ShoppingBag },
-  { name: "Automotive", slug: "automotive", icon: Car }
-];
+import * as lucideIcons from "lucide-react";
 
-export default function DirectoryClient({ initialListings }: { initialListings?: any[] }) {
+export default function DirectoryClient({ initialListings, dbCategories }: { initialListings?: any[], dbCategories?: any[] }) {
+  const categories = dbCategories && dbCategories.length > 0 ? dbCategories : siteConfig.categories;
   const [listings, setListings] = useState<any[]>(initialListings || []);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCity, setSelectedCity] = useState("all");
@@ -123,22 +115,21 @@ export default function DirectoryClient({ initialListings }: { initialListings?:
 
           {/* Browse Highlights — Category Icons */}
           <div className="mt-8 text-center">
-            <div className="flex flex-wrap justify-center gap-3">
-              {CATEGORIES.map((cat) => {
-                const IconComp = cat.icon;
-                const isActive = activeCategory === cat.slug;
+            <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 justify-center">
+              {categories.map((category) => {
+                const Icon = (lucideIcons as any)[category.iconName || category.icon || "Box"] || lucideIcons.Box;
                 return (
                   <button
-                    key={cat.slug}
-                    onClick={() => setActiveCategory(isActive ? null : cat.slug)}
-                    className={`flex items-center px-4 py-2 rounded-full border transition-all duration-200 ${
-                      isActive
-                        ? "bg-brandRed border-brandRed text-white shadow-md"
-                        : "bg-white border-brandBorder-light text-brandText-medium hover:border-brandRed hover:text-brandRed"
+                    key={category.slug}
+                    onClick={() => setActiveCategory(activeCategory === category.slug ? null : category.slug)}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full border transition whitespace-nowrap text-xs font-bold ${
+                      activeCategory === category.slug
+                        ? "border-[#E8505B] bg-[#E8505B] text-white"
+                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
                     }`}
                   >
-                    <IconComp className="h-4 w-4 mr-2" />
-                    <span className="text-xs font-bold leading-tight">{cat.name}</span>
+                    <Icon className="w-3.5 h-3.5" />
+                    {category.name}
                   </button>
                 );
               })}

@@ -46,13 +46,14 @@ export const siteConfig = {
 
   // Default Categories (Icon names map to lucide-react in HomeClient)
   categories: [
-    { name: "Food", slug: "foods", iconName: "Utensils" },
-    { name: "Hotels", slug: "hotels", iconName: "Hotel" },
-    { name: "Jobs", slug: "jobs", iconName: "Briefcase" },
     { name: "Medical", slug: "medicals", iconName: "HeartPulse" },
+    { name: "Automotive", slug: "automotive", iconName: "Car" },
+    { name: "Food", slug: "foods", iconName: "Utensils" },
     { name: "Services", slug: "services", iconName: "Wrench" },
+    { name: "Professional", slug: "professional", iconName: "Briefcase" },
+    { name: "Beauty & Spa", slug: "beauty-spa", iconName: "Sparkles" },
     { name: "Shopping", slug: "shopping", iconName: "ShoppingBag" },
-    { name: "Automotive", slug: "automotive", iconName: "Car" }
+    { name: "Fitness", slug: "fitness", iconName: "Dumbbell" }
   ],
 
   // Featured Destinations (Fallback when not enough data)

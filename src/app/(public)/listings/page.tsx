@@ -9,6 +9,9 @@ export default async function DirectoryPage() {
   
   // Fetch initial un-filtered listings for the directory page
   const initialListings = await searchBusinesses(supabase, {});
+  
+  // Fetch categories
+  const { data: dbCategories } = await supabase.from("categories").select("*").order("name");
 
-  return <DirectoryClient initialListings={initialListings} />;
+  return <DirectoryClient initialListings={initialListings} dbCategories={dbCategories || []} />;
 }

@@ -53,10 +53,14 @@ export default function HomeClient({
   }, [initialListings]);
 
   const dynamicDestinations = useMemo(() => {
-    return cities.map(d => ({
-      ...d,
-      count: destinationCounts[d.slug] || 0
-    }));
+    return cities.map(d => {
+      const fallback = siteConfig.destinations.find(c => c.slug === d.slug);
+      return {
+        ...d,
+        count: destinationCounts[d.slug] || 0,
+        image: d.image || fallback?.image || "/hero-img.jpg"
+      };
+    });
   }, [cities, destinationCounts]);
 
   const isFirstRender = useRef(true);

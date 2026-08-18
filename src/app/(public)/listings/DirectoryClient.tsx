@@ -115,7 +115,7 @@ export default function DirectoryClient({ initialListings, dbCategories }: { ini
 
           {/* Browse Highlights — Category Icons */}
           <div className="mt-8 text-center">
-            <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 justify-center">
+            <div className="flex gap-2 overflow-x-auto no-scrollbar py-2 justify-start sm:justify-center">
               {categories.map((category) => {
                 const Icon = (lucideIcons as any)[category.iconName || category.icon || "Box"] || lucideIcons.Box;
                 return (

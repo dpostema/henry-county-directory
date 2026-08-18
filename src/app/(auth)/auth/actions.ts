@@ -126,9 +126,17 @@ export async function requestPasswordReset(formData: FormData) {
 export async function updatePassword(formData: FormData) {
   const supabase = await createClient();
   const password = formData.get("password") as string;
+  const code = formData.get("code") as string;
 
   if (!password) {
     return { error: "Password is required." };
+  }
+
+  if (code) {
+    const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
+    if (exchangeError) {
+      return { error: "Invalid or expired recovery link. Please request a new one." };
+    }
   }
 
   const { error } = await supabase.auth.updateUser({ password });

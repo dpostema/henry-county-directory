@@ -16,14 +16,16 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [origin, setOrigin] = useState("");
   const router = useRouter();
+  const [code, setCode] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // Set origin for redirection link
       setOrigin(window.location.origin);
-      // If URL contains access_token or hash includes type=recovery, we are in update mode
       if (window.location.hash.includes("type=recovery") || window.location.search.includes("code=")) {
         setIsUpdateMode(true);
+        const params = new URLSearchParams(window.location.search);
+        const c = params.get("code");
+        if (c) setCode(c);
       } else {
         const supabase = createClient();
         supabase.auth.getUser().then(({ data: { user } }) => {
@@ -112,6 +114,7 @@ export default function ResetPasswordPage() {
             {isUpdateMode ? (
               // Update mode form
               <form onSubmit={handleUpdatePassword} className="space-y-4 max-w-sm mx-auto">
+                <input type="hidden" name="code" value={code} />
                 <div className="relative">
                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                   <input

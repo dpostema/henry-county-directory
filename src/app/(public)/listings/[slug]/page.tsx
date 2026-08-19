@@ -16,7 +16,8 @@ interface PageProps {
 export const revalidate = 60;
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  let { slug } = await params;
+  slug = slug.toLowerCase().replace(/\s+/g, "-");
   const supabase = await createClient();
   const { data: business } = await supabase
     .from("businesses")
@@ -35,7 +36,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function ListingDetailPage({ params }: PageProps) {
-  const { slug } = await params;
+  let { slug } = await params;
+  
+  if (slug.includes(" ") || slug !== slug.toLowerCase()) {
+    slug = slug.toLowerCase().replace(/\s+/g, "-");
+  }
+
   const supabase = await createClient();
 
   // Try to load business details from DB

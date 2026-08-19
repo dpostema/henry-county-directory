@@ -26,7 +26,7 @@ export default function NotFound() {
               className="flex items-center justify-center gap-2 w-full bg-brandRed hover:bg-brandRed-hover text-white py-3 px-6 rounded-full font-bold text-sm transition-colors shadow-sm"
             >
               <Search className="w-4 h-4" />
-              Search ${siteConfig.region.name}
+              Search {siteConfig.region.name}
             </Link>
             <Link
               href="/category/foods"

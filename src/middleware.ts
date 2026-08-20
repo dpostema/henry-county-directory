@@ -14,27 +14,36 @@ function getLocale(request: NextRequest) {
   return defaultLocale;
 }
 
-export async function proxy(request: NextRequest) {
-  // 1. Rate Limiting for API/Auth routes
+export async function middleware(request: NextRequest) {
+  // 1. Rate Limiting for API routes
   if (request.nextUrl.pathname.startsWith('/api/') || 
       request.nextUrl.pathname.startsWith('/auth/')) {
-    const ip = request.headers.get('x-forwarded-for') ?? 'unknown';
-    if (ip !== 'unknown') {
-      const now = Date.now();
-      const userRecord = rateLimitMap.get(ip);
-      
-      if (!userRecord || now - userRecord.lastReset > RATE_LIMIT_WINDOW_MS) {
-        rateLimitMap.set(ip, { count: 1, lastReset: now });
-      } else {
-        userRecord.count += 1;
-        if (userRecord.count > MAX_REQUESTS_PER_WINDOW) {
-          return new NextResponse('Too Many Requests. Please try again later.', { 
-            status: 429,
-            headers: {
-              'Retry-After': Math.ceil((RATE_LIMIT_WINDOW_MS - (now - userRecord.lastReset)) / 1000).toString()
-            }
-          });
+    const ip = request.headers.get('x-forwarded-for') ?? '127.0.0.1';
+    
+    // Basic in-memory rate limiting with lazy cleanup
+    const now = Date.now();
+    const userRecord = rateLimitMap.get(ip);
+    
+    // Simple garbage collection: occasionally clear old entries if map gets too large
+    if (rateLimitMap.size > 1000) {
+      rateLimitMap.forEach((value, key) => {
+        if (now - value.lastReset > RATE_LIMIT_WINDOW_MS) {
+          rateLimitMap.delete(key);
         }
+      });
+    }
+    
+    if (!userRecord || now - userRecord.lastReset > RATE_LIMIT_WINDOW_MS) {
+      rateLimitMap.set(ip, { count: 1, lastReset: now });
+    } else {
+      userRecord.count += 1;
+      if (userRecord.count > MAX_REQUESTS_PER_WINDOW) {
+        return new NextResponse('Too Many Requests', { 
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((RATE_LIMIT_WINDOW_MS - (now - userRecord.lastReset)) / 1000).toString()
+          }
+        });
       }
     }
   }

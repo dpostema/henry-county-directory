@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { createClient as createServerClient } from "@/utils/supabase/server";
+import { createClient as createServerClient, getAdminUser } from "@/utils/supabase/server";
 import { createClient as createDirectClient } from "@supabase/supabase-js";
 import { siteConfig } from "@/config/site";
 
@@ -97,6 +97,11 @@ const CITY_COORDINATES: Record<string, { lat: number; lon: number }> = {
 
 export async function POST(req: Request) {
   try {
+    const adminUser = await getAdminUser();
+    if (!adminUser) {
+      return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 403 });
+    }
+
     const { csvText } = await req.json();
 
     if (!csvText) {

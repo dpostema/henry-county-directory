@@ -128,12 +128,12 @@ export default function ListingCard({ business }: ListingCardProps) {
       <div className="p-4 flex-grow flex flex-col relative pt-7">
         {/* Avatar overlap */}
         <div className="absolute -top-5 left-4 h-10 w-10 rounded-full border-2 border-white bg-slate-100 overflow-hidden shadow-sm">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={business.owner?.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${business.name}`}
             alt="Owner"
-            className="h-full w-full object-cover"
-            loading="lazy"
+            fill
+            sizes="40px"
+            className="object-cover"
           />
         </div>
 

@@ -268,11 +268,12 @@ export default function VisitorDashboard({ userProfile, favorites, reviews }: Vi
                         />
                       ) : (
                         /* Fallback: generated avatar based on business name */
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={`https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(item.name)}&backgroundColor=e8505b&fontSize=36&fontWeight=700&textColor=ffffff`}
                           alt={item.name}
-                          className="h-full w-full object-cover"
+                          fill
+                          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+                          className="object-cover"
                         />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

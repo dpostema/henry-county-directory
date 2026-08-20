@@ -1856,11 +1856,12 @@ export default function DashboardClient({
                   {typeof window !== "undefined" && (() => {
                     const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(window.location.origin + "/listings/" + activeBusiness?.slug)}`;
                     return (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
+                      <Image
                         src={qrUrl}
                         alt="Listing QR Code"
-                        className="w-44 h-44 bg-white border border-brandBorder-light p-2.5 rounded shadow-sm flex-shrink-0"
+                        width={176}
+                        height={176}
+                        className="bg-white border border-brandBorder-light p-2.5 rounded shadow-sm flex-shrink-0"
                       />
                     );
                   })()}

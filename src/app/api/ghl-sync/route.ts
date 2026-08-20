@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { createClient, getAdminUser } from "@/utils/supabase/server";
 
 export async function POST() {
   try {
+    const adminUser = await getAdminUser();
+    if (!adminUser) {
+      return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 403 });
+    }
+
     const supabase = await createClient();
 
     // Fetch unclaimed listings from cold imports

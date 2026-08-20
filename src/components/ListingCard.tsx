@@ -134,6 +134,7 @@ export default function ListingCard({ business }: ListingCardProps) {
             fill
             sizes="40px"
             className="object-cover"
+            unoptimized
           />
         </div>
 

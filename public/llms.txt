@@ -1,0 +1,17 @@
+# Henry County Directory
+
+> The premier local business directory for Henry County, Georgia, including McDonough, Stockbridge, Hampton, and Locust Grove. We connect residents with trusted local services, healthcare, dining, and retail.
+
+## About
+- [About Us](https://henrycounty.com/about): Our mission and community focus.
+- [Contact](https://henrycounty.com/contact): How to reach our team.
+
+## Key Resources
+- [Browse Categories](https://henrycounty.com/category): Find local businesses by industry (e.g., Medical, Automotive, Foods, Services).
+- [Browse Cities](https://henrycounty.com/city): Explore businesses by city location.
+- [Deals & Promotions](https://henrycounty.com/deals): Local discounts and offers.
+- [Local Events](https://henrycounty.com/events): Community events calendar.
+
+## For Business Owners
+- [Claim Your Business](https://henrycounty.com/claim): Take control of your listing and connect with the community.
+- [Add a Listing](https://henrycounty.com/add-listing): Submit a new business to the directory.

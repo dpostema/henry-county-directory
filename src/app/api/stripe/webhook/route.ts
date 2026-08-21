@@ -74,9 +74,9 @@ export async function POST(req: Request) {
             email: bus.email,
             name: bus.name,
             phone: bus.phone,
-            event: "directory-subscribed",
+            event: "directory-upgrade",
             source: "Stripe Webhook",
-            tags: ["directory-subscribed", `plan-${planTier}`]
+            tags: ["directory-upgrade", `plan-${planTier}`]
           });
         }
 

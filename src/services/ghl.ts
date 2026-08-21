@@ -31,6 +31,18 @@ export async function dispatchGhlWebhook(payload: GHLPayload) {
     case "directory-unsubscribed":
       webhookUrl = process.env.GHL_WEBHOOK_UNSUBSCRIBED;
       break;
+    case "business-lead":
+      webhookUrl = process.env.GHL_WEBHOOK_BUSINESS_LEAD;
+      break;
+    case "general-contact":
+      webhookUrl = process.env.GHL_WEBHOOK_CONTACT;
+      break;
+    case "directory-upgrade":
+      webhookUrl = process.env.GHL_WEBHOOK_UPGRADE;
+      break;
+    case "report-listing":
+      webhookUrl = process.env.GHL_WEBHOOK_REPORT_LISTING;
+      break;
     default:
       console.log(`[GHL Webhook Skipped] Unknown event type: ${payload.event}`);
       return;

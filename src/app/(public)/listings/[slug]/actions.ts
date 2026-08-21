@@ -95,33 +95,17 @@ export async function submitLead(formData: FormData) {
     }
 
     // Sync to GoHighLevel (GHL)
-    const ghlAccessToken = process.env.GHL_ACCESS_TOKEN;
-    const ghlLocationId = process.env.GHL_LOCATION_ID || "mock-location-id";
-
-    if (ghlAccessToken) {
-      try {
-        await fetch("https://services.leadconnectorhq.com/contacts/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${ghlAccessToken}`,
-            Version: "2021-04-15",
-          },
-          body: JSON.stringify({
-            name,
-            email,
-            phone: phone || undefined,
-            tags: ["lead-submission", "directory-template"],
-            locationId: ghlLocationId,
-          }),
-        });
-        console.log(`[GHL LEAD SYNC] Synced lead for ${name} to GHL Location ${ghlLocationId}`);
-      } catch (err: any) {
-        console.error("[GHL LEAD SYNC ERROR]", err.message);
-      }
-    } else {
-      console.log(`[GHL LEAD SYNC MOCK] Synced lead for ${name} (${email}) to Location ${ghlLocationId}`);
-    }
+    const { dispatchGhlWebhook } = await import("@/services/ghl");
+    await dispatchGhlWebhook({
+      email,
+      name,
+      phone: phone || undefined,
+      event: "business-lead",
+      source: "Directory Listing",
+      tags: ["business-lead", aiTag, priority],
+      businessId,
+      message
+    });
 
     // Send email notification to business owner
     const { data: business } = await supabase
@@ -290,5 +274,41 @@ export async function submitQuestion(formData: FormData) {
   } catch (err) {
     console.error("[SUBMIT QUESTION UNEXPECTED ERROR]", err);
     return { error: "An unexpected network error occurred. Please try again." };
+  }
+}
+
+export async function submitListingReport(formData: FormData) {
+  const headersList = await headers();
+  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0];
+  const allowed = await checkRateLimit(ip, "submit_report", 5, 3600); // 5 reports per hour
+  if (!allowed) return { error: "Too many reports submitted. Please try again later." };
+
+  const businessId = formData.get("businessId") as string;
+  const reason = formData.get("reason") as string;
+  const description = formData.get("description") as string;
+  const slug = formData.get("slug") as string;
+  const businessName = formData.get("businessName") as string;
+
+  if (!businessId || !reason) {
+    return { error: "Reason is required." };
+  }
+
+  try {
+    const { dispatchGhlWebhook } = await import("@/services/ghl");
+    await dispatchGhlWebhook({
+      event: "report-listing",
+      businessId,
+      businessName,
+      reason,
+      description,
+      slug,
+      source: "Directory Listing",
+      tags: ["report-listing", "directory-template"],
+    });
+
+    return { success: "Report submitted successfully. Thank you for your help!" };
+  } catch (err) {
+    console.error("[SUBMIT REPORT ERROR]", err);
+    return { error: "An unexpected error occurred. Please try again later." };
   }
 }

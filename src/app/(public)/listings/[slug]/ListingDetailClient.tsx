@@ -5,7 +5,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Star, MapPin, Phone, Mail, Globe, CircleCheck, Clock, MessageSquare, Send, Heart, Scale, Copy, Check, Calendar } from "lucide-react";
+import { Star, MapPin, Phone, Mail, Globe, CircleCheck, Clock, MessageSquare, Send, Heart, Scale, Copy, Check, Calendar, Flag } from "lucide-react";
 import { submitLead, submitReview, submitQuestion } from "./actions";
 import { isBusinessOpenNow } from "@/services/search";
 import { toggleFavoriteAction, checkFavoriteStatus, createBookingAction } from "@/app/(public)/listings/actions";
@@ -86,6 +86,35 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
       setBookingDetails("");
     } else if (res.error) {
       setBookingError(res.error);
+    }
+  };
+
+  // Report Inaccurate Information hooks
+  const [showReportForm, setShowReportForm] = useState(false);
+  const [reportLoading, setReportLoading] = useState(false);
+  const [reportSuccess, setReportSuccess] = useState<string | null>(null);
+  const [reportError, setReportError] = useState<string | null>(null);
+
+  const handleReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setReportLoading(true);
+    setReportSuccess(null);
+    setReportError(null);
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    formData.append("businessId", business.id);
+    formData.append("businessName", business.name);
+    formData.append("slug", business.slug);
+
+    const { submitListingReport } = await import("./actions");
+    const res = await submitListingReport(formData);
+
+    setReportLoading(false);
+    if (res?.error) {
+      setReportError(res.error);
+    } else if (res?.success) {
+      setReportSuccess(res.success);
+      (e.target as HTMLFormElement).reset();
     }
   };
 
@@ -723,6 +752,53 @@ export default function ListingDetailClient({ business, user, dbReviews, dbQnas 
                   {business.website || "No website listed"}
                 </a>
               </div>
+            </div>
+
+            {/* Report Issue Button */}
+            <div className="pt-4 mt-4 border-t border-brandBorder-light">
+              <button
+                onClick={() => setShowReportForm(!showReportForm)}
+                className="flex items-center space-x-1.5 text-xs text-brandText-light hover:text-brandRed transition-colors"
+              >
+                <Flag className="h-3.5 w-3.5" />
+                <span>Report inaccurate information</span>
+              </button>
+
+              {showReportForm && (
+                <form onSubmit={handleReportSubmit} className="mt-4 space-y-3 bg-slate-50 p-4 rounded-btn border border-brandBorder-light">
+                  <div>
+                    <label className="block text-xs font-semibold text-brandText-dark mb-1">Reason</label>
+                    <select
+                      name="reason"
+                      required
+                      className="w-full p-2 text-xs border border-brandBorder-light rounded focus:outline-none focus:border-brandRed"
+                    >
+                      <option value="">Select a reason...</option>
+                      <option value="Closed">Permanently Closed</option>
+                      <option value="Wrong Number">Wrong Phone Number</option>
+                      <option value="Wrong Location">Incorrect Address</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-brandText-dark mb-1">Details (Optional)</label>
+                    <textarea
+                      name="description"
+                      rows={2}
+                      className="w-full p-2 text-xs border border-brandBorder-light rounded focus:outline-none focus:border-brandRed"
+                    ></textarea>
+                  </div>
+                  {reportError && <div className="text-xs text-brandRed font-medium">{reportError}</div>}
+                  {reportSuccess && <div className="text-xs text-badge-verified font-medium">{reportSuccess}</div>}
+                  <button
+                    type="submit"
+                    disabled={reportLoading}
+                    className="w-full bg-brandRed hover:bg-brandRed-hover text-white text-xs font-bold py-2 rounded shadow-sm transition disabled:opacity-50"
+                  >
+                    {reportLoading ? "Submitting..." : "Submit Report"}
+                  </button>
+                </form>
+              )}
             </div>
           </section>
 

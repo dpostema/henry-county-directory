@@ -14,7 +14,7 @@ function getLocale(request: NextRequest) {
   return defaultLocale;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // 1. Rate Limiting for API routes
   if (request.nextUrl.pathname.startsWith('/api/') || 
       request.nextUrl.pathname.startsWith('/auth/')) {

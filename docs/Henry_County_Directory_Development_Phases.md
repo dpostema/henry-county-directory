@@ -1,7 +1,7 @@
 # Henry County Directory — Antigravity Prompts
 
 Companion file to `Henry_County_Directory_Development_Phases.md`. Use these prompts when working with the AI agent in Antigravity IDE. Copy/paste and adjust as needed — attach the reference UI image wherever noted.
-
+ n12
 ---
 
 ## Setup: Save the Reference Image First

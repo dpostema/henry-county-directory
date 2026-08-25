@@ -3,12 +3,15 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { siteConfig } from "@/config/site";
+import Link from "next/link";
 
 interface CookieConsentProps {
   cookieKey?: string;
   message?: string;
   acceptText?: string;
   declineText?: string;
+  policyUrl?: string;
+  policyText?: string;
 }
 
 export default function CookieConsent({
@@ -16,8 +19,11 @@ export default function CookieConsent({
   message = siteConfig.cookieConsentMessage,
   acceptText = siteConfig.cookieConsentAccept,
   declineText = siteConfig.cookieConsentDecline,
+  policyUrl = "/privacy",
+  policyText = "Privacy Policy",
 }: CookieConsentProps) {
   const [show, setShow] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     // Check if the user has already consented
@@ -29,23 +35,46 @@ export default function CookieConsent({
   }, [cookieKey]);
 
   const handleAccept = () => {
-    localStorage.setItem(cookieKey, "true");
-    setShow(false);
+    setIsExiting(true);
+    setTimeout(() => {
+      localStorage.setItem(cookieKey, "true");
+      setShow(false);
+    }, 500);
   };
 
   const handleDecline = () => {
+    setIsExiting(true);
     // Some regions require explicit decline handling, 
     // but typically we can just hide it for the session or set a decline flag
-    localStorage.setItem(cookieKey, "declined");
-    setShow(false);
+    setTimeout(() => {
+      localStorage.setItem(cookieKey, "declined");
+      setShow(false);
+    }, 500);
   };
 
   if (!show) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-brandText-dark text-white p-4 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 animate-in slide-in-from-bottom-full duration-500">
+    <div
+      role="region"
+      aria-label="Cookie consent banner"
+      className={`fixed bottom-0 left-0 right-0 z-50 bg-brandText-dark text-white p-4 sm:p-6 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4 transition-all duration-500 ease-in-out ${
+        isExiting ? "translate-y-full opacity-0" : "animate-in slide-in-from-bottom-full"
+      }`}
+    >
       <div className="flex-1 max-w-4xl text-sm leading-relaxed text-slate-300">
-        <p>{message}</p>
+        <p>
+          {message}
+          {policyUrl && (
+            <>
+              {" "}
+              <Link href={policyUrl} className="underline hover:text-white transition-colors">
+                {policyText}
+              </Link>
+              .
+            </>
+          )}
+        </p>
       </div>
       <div className="flex items-center space-x-3 whitespace-nowrap">
         <button

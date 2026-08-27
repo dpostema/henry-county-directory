@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { signup, getCategories } from "../../actions";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft, Building2, Tag, MapPin, Phone } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Camera, ArrowLeft, Building2, Tag, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function BusinessSignupPage() {
@@ -15,7 +15,7 @@ export default function BusinessSignupPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [dbCategories, setDbCategories] = useState<any[]>([]);
+  const [dbCategories, setDbCategories] = useState<{name: string, slug: string}[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export default function BusinessSignupPage() {
                   defaultValue=""
                 >
                   <option value="" disabled className="text-slate-400">Select Category</option>
-                  {(dbCategories.length > 0 ? dbCategories : siteConfig.categories).map((cat: any) => (
+                  {(dbCategories.length > 0 ? dbCategories : siteConfig.categories).map((cat: {name: string, slug: string}) => (
                     <option key={cat.slug} value={cat.name}>{cat.name}</option>
                   ))}
                   <option value="Other">Other</option>

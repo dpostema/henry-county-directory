@@ -141,6 +141,10 @@ export default function DashboardClient({
         setActiveTab("billing");
         window.history.replaceState(null, "", window.location.pathname);
       }
+      if (params.get("tab") === "edit") {
+        setActiveTab("edit");
+        window.history.replaceState(null, "", window.location.pathname);
+      }
     }
   }, []);
 

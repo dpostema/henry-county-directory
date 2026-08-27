@@ -165,3 +165,9 @@ export async function updatePassword(formData: FormData) {
 
   return { success: "Password updated successfully!" };
 }
+
+export async function getCategories() {
+  const supabase = await createClient();
+  const { data } = await supabase.from('categories').select('*').order('name');
+  return data || [];
+}

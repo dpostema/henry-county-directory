@@ -3,10 +3,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ContactForm from "./ContactForm";
 import { Mail, MapPin, Phone } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Henry County Directory",
-  description: "Get in touch with the Henry County Directory team for support, inquiries, or feedback.",
+  title: `Contact Us | ${siteConfig.name}`,
+  description: `Get in touch with the ${siteConfig.name} team for support, inquiries, or feedback.`,
 };
 
 export default function ContactPage() {
@@ -67,8 +68,8 @@ export default function ContactPage() {
                     <div>
                       <h4 className="text-sm font-bold text-brandText-dark mb-1">Office</h4>
                       <p className="text-sm text-brandText-medium">
-                        McDonough, GA<br/>
-                        Henry County
+                        {siteConfig.region.name}<br/>
+                        Georgia, USA
                       </p>
                     </div>
                   </div>

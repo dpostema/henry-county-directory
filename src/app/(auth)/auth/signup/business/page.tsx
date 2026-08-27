@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
-import { signup } from "../../actions";
+import { signup, getCategories } from "../../actions";
 import Link from "next/link";
 import Image from "next/image";
 import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft, Building2, Tag, MapPin, Phone } from "lucide-react";
@@ -15,7 +15,12 @@ export default function BusinessSignupPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [dbCategories, setDbCategories] = useState<any[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    getCategories().then(data => setDbCategories(data));
+  }, []);
 
   useEffect(() => {
     const supabase = createClient();
@@ -150,11 +155,9 @@ export default function BusinessSignupPage() {
                   defaultValue=""
                 >
                   <option value="" disabled className="text-slate-400">Select Category</option>
-                  <option value="Restaurant">Restaurant & Dining</option>
-                  <option value="Retail">Retail & Shopping</option>
-                  <option value="Automotive">Automotive</option>
-                  <option value="Health">Health & Medical</option>
-                  <option value="Services">Professional Services</option>
+                  {(dbCategories.length > 0 ? dbCategories : siteConfig.categories).map((cat: any) => (
+                    <option key={cat.slug} value={cat.name}>{cat.name}</option>
+                  ))}
                   <option value="Other">Other</option>
                 </select>
               </div>

@@ -34,8 +34,19 @@ export async function signup(formData: FormData) {
   const origin = formData.get("origin") as string || process.env.NEXT_PUBLIC_SITE_URL;
   const avatar = formData.get("avatar") as File | null;
 
+  // Additional Visitor Fields
+  const displayName = formData.get("displayName") as string;
+  const zipCode = formData.get("zipCode") as string;
+  const phone = formData.get("phone") as string;
+
+  // Additional Business Fields
+  const businessName = formData.get("businessName") as string;
+  const businessCategory = formData.get("businessCategory") as string;
+  const businessPhone = formData.get("businessPhone") as string;
+  const businessZip = formData.get("businessZip") as string;
+
   if (!email || !password || !fullName || !role) {
-    return { error: "All fields are required." };
+    return { error: "Name, email, and password are required." };
   }
 
   let avatarUrl: string | undefined = undefined;
@@ -70,6 +81,13 @@ export async function signup(formData: FormData) {
         full_name: fullName,
         role: role,
         avatar_url: avatarUrl,
+        display_name: displayName,
+        zip_code: zipCode,
+        phone: phone,
+        business_name: businessName,
+        business_category: businessCategory,
+        business_phone: businessPhone,
+        business_zip: businessZip,
       },
     },
   });

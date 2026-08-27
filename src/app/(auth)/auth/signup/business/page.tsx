@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { signup } from "../../actions";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft, Building2, Tag, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function BusinessSignupPage() {
@@ -124,8 +124,64 @@ export default function BusinessSignupPage() {
                   name="fullName"
                   required
                   className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
-                  placeholder="Full Name"
+                  placeholder="Your Full Name"
                 />
+              </div>
+
+              <div className="relative">
+                <Building2 className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  id="businessName"
+                  type="text"
+                  name="businessName"
+                  required
+                  className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                  placeholder="Business Name"
+                />
+              </div>
+
+              <div className="relative">
+                <Tag className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <select
+                  id="businessCategory"
+                  name="businessCategory"
+                  required
+                  className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all text-slate-900 appearance-none bg-white"
+                  defaultValue=""
+                >
+                  <option value="" disabled className="text-slate-400">Select Category</option>
+                  <option value="Restaurant">Restaurant & Dining</option>
+                  <option value="Retail">Retail & Shopping</option>
+                  <option value="Automotive">Automotive</option>
+                  <option value="Health">Health & Medical</option>
+                  <option value="Services">Professional Services</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    id="businessPhone"
+                    type="tel"
+                    name="businessPhone"
+                    required
+                    className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                    placeholder="Business Phone"
+                  />
+                </div>
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    id="businessZip"
+                    type="text"
+                    name="businessZip"
+                    required
+                    className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                    placeholder="Business Zip Code"
+                  />
+                </div>
               </div>
 
               <div className="relative">

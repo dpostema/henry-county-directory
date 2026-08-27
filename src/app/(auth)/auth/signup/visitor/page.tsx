@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { signup } from "../../actions";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, Camera, ArrowLeft, MapPin, Phone } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function VisitorSignupPage() {
@@ -126,6 +126,42 @@ export default function VisitorSignupPage() {
                   className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
                   placeholder="Full Name"
                 />
+              </div>
+
+              <div className="relative">
+                <AtSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  id="displayName"
+                  type="text"
+                  name="displayName"
+                  required
+                  className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                  placeholder="Display Name (Username)"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="relative">
+                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    id="zipCode"
+                    type="text"
+                    name="zipCode"
+                    required
+                    className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                    placeholder="Zip Code"
+                  />
+                </div>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                  <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    className="w-full pl-11 pr-4 py-2.5 border border-slate-200 rounded-full text-xs font-medium focus:outline-none focus:border-[#E8505B] focus:ring-2 focus:ring-[#E8505B]/20 transition-all placeholder:text-slate-400 text-slate-900"
+                    placeholder="Phone (Optional)"
+                  />
+                </div>
               </div>
 
               <div className="relative">

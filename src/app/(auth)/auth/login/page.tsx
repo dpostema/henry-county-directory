@@ -6,7 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { login } from "../actions";
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Lock, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, Globe, Share2, AtSign, MessageCircle, ArrowLeft } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function LoginPage() {
@@ -47,11 +47,15 @@ export default function LoginPage() {
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#E8505B] rounded-tl-full opacity-90 pointer-events-none hidden sm:block" />
 
       {/* Floating Split Card */}
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 relative z-10 border border-slate-100 min-h-[580px]">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden relative z-10 border border-slate-100">
         
         {/* Left Column: Form Pane */}
-        <div className="p-8 sm:p-12 flex flex-col justify-between">
-          <div>
+        <div className="p-8 sm:p-12 flex flex-col justify-center relative">
+          <button onClick={() => router.back()} className="absolute top-6 left-6 text-slate-400 hover:text-slate-600 flex items-center gap-1 text-xs font-bold transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back
+          </button>
+          
+          <div className="mt-6">
             {/* Header Brand Subtitle */}
             <div className="text-center space-y-1 mb-8">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
@@ -138,74 +142,7 @@ export default function LoginPage() {
               </Link>
             </div>
           </div>
-
-          {/* Social Divider & Icons */}
-          <div className="pt-4 border-t border-slate-100 text-center space-y-3">
-            <div className="relative flex items-center justify-center max-w-xs mx-auto">
-              <div className="border-t border-slate-200 w-full" />
-              <span className="bg-white px-3 text-[10px] uppercase font-bold text-slate-400 tracking-wider absolute">
-                Or
-              </span>
-            </div>
-
-            <p className="text-[11px] text-slate-400 font-medium pt-1">Continue with social media</p>
-
-            <div className="flex items-center justify-center gap-3">
-              {[
-                { icon: Globe, label: "Google" },
-                { icon: Share2, label: "Share" },
-                { icon: AtSign, label: "Email" },
-                { icon: MessageCircle, label: "Chat" },
-              ].map((soc, i) => {
-                const Icon = soc.icon;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => alert(`Sign in with ${soc.label} active.`)}
-                    className="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center text-slate-500 hover:text-[#E8505B] hover:border-[#E8505B] hover:bg-red-50/50 transition-all cursor-pointer shadow-xs"
-                    title={soc.label}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                  </button>
-                );
-              })}
-            </div>
-          </div>
         </div>
-
-        {/* Right Column: Hero Graphic Pane */}
-        <div className="bg-gradient-to-br from-[#E8505B] via-[#D93845] to-[#991B1B] text-white p-8 sm:p-12 flex flex-col justify-center items-center text-center relative overflow-hidden">
-          {/* Subtle Ambient Overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
-          <div className="relative z-10 max-w-xs space-y-6">
-            <div className="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto shadow-xl p-3">
-              <Image 
-                src="/logo.svg" 
-                alt={`${siteConfig.name} Logo`} 
-                width={52} 
-                height={52} 
-                className="object-contain" 
-              />
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-xl font-black font-heading tracking-tight text-white drop-shadow-sm">
-                {siteConfig.name}
-              </h2>
-              <p className="text-xs text-white/80 font-light leading-relaxed">
-                Discover local businesses, manage your claimed directory profiles, interact with customer reviews, and grow your local presence.
-              </p>
-            </div>
-
-            <div className="pt-4 flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-white opacity-100" />
-              <span className="w-2 h-2 rounded-full bg-white opacity-40" />
-              <span className="w-2 h-2 rounded-full bg-white opacity-40" />
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );

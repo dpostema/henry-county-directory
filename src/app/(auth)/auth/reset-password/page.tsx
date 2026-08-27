@@ -82,10 +82,10 @@ export default function ResetPasswordPage() {
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#E8505B] rounded-tl-full opacity-90 pointer-events-none hidden sm:block" />
 
       {/* Floating Split Card */}
-      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden grid grid-cols-1 md:grid-cols-2 relative z-10 border border-slate-100 min-h-[580px]">
+      <div className="w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden relative z-10 border border-slate-100">
         
         {/* Left Column: Form Pane */}
-        <div className="p-8 sm:p-12 flex flex-col justify-between">
+        <div className="p-8 sm:p-12 flex flex-col justify-center">
           <div>
             {/* Header Brand Subtitle */}
             <div className="text-center space-y-1 mb-8">
@@ -188,39 +188,6 @@ export default function ResetPasswordPage() {
               <span>Back to Login</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-          </div>
-        </div>
-
-        {/* Right Column: Hero Graphic Pane */}
-        <div className="bg-gradient-to-br from-[#E8505B] via-[#D93845] to-[#991B1B] text-white p-8 sm:p-12 flex flex-col justify-center items-center text-center relative overflow-hidden">
-          {/* Subtle Ambient Overlay */}
-          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent pointer-events-none" />
-          
-          <div className="relative z-10 max-w-xs space-y-6">
-            <div className="w-20 h-20 rounded-3xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center mx-auto shadow-xl p-3">
-              <Image 
-                src="/logo.svg" 
-                alt={`${siteConfig.name} Logo`} 
-                width={52} 
-                height={52} 
-                className="object-contain" 
-              />
-            </div>
-
-            <div className="space-y-2">
-              <h2 className="text-xl font-black font-heading tracking-tight text-white drop-shadow-sm">
-                {siteConfig.name}
-              </h2>
-              <p className="text-xs text-white/80 font-light leading-relaxed">
-                Securely recover access to your {siteConfig.name} account and listings.
-              </p>
-            </div>
-
-            <div className="pt-4 flex items-center justify-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-white opacity-40" />
-              <span className="w-2 h-2 rounded-full bg-white opacity-40" />
-              <span className="w-2 h-2 rounded-full bg-white opacity-100" />
-            </div>
           </div>
         </div>
 

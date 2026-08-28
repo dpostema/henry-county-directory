@@ -22,11 +22,11 @@ export default async function ModerationDashboard() {
           <h2 className="text-lg font-bold mb-4">Pending Reviews</h2>
           {pendingReviews && pendingReviews.length > 0 ? (
             <div className="space-y-4">
-              {pendingReviews.map((review: any) => (
+              {pendingReviews.map((review: { id: string, business?: { name: string }, author?: { full_name: string }, comment: string, rating: number }) => (
                 <div key={review.id} className="p-4 border rounded-lg bg-slate-50">
                   <p className="font-bold">{review.business?.name}</p>
                   <p className="text-sm">By: {review.author?.full_name}</p>
-                  <p className="mt-2 text-sm italic">"{review.comment}"</p>
+                  <p className="mt-2 text-sm italic">&quot;{review.comment}&quot;</p>
                   <p className="mt-1 text-xs text-brandRed">Rating: {review.rating}/5</p>
                   <div className="mt-3 flex space-x-2">
                     <button className="px-3 py-1 bg-badge-verified text-white text-xs font-bold rounded">Approve</button>

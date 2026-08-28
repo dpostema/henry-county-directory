@@ -22,7 +22,7 @@ export default function ContactPage() {
             Contact Us
           </h1>
           <p className="text-slate-300 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Have a question, need help with your listing, or want to partner with us? We'd love to hear from you. Fill out the form below and our team will get back to you shortly.
+            Have a question, need help with your listing, or want to partner with us? We&apos;d love to hear from you. Fill out the form below and our team will get back to you shortly.
           </p>
         </div>
 

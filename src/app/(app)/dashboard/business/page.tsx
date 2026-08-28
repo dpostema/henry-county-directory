@@ -50,6 +50,7 @@ export default async function BusinessDashboardPage() {
     const { data: newBusiness, error: insertError } = await supabase.from("businesses").insert({
       owner_id: user.id,
       name: user.user_metadata.business_name,
+      // eslint-disable-next-line react-hooks/purity
       slug: user.user_metadata.business_name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + String(Date.now()).slice(-4),
       phone: user.user_metadata.business_phone || null,
       category_id: categoryId,

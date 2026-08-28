@@ -105,6 +105,7 @@ export default function DashboardClient({
     if (typeof window !== "undefined" && userProfile?.id) {
       const skipped = localStorage.getItem(`skip_owner_onboarding_${userProfile.id}`);
       if (skipped) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setSkipOwnerOnboarding(true);
       }
     }
@@ -131,17 +132,22 @@ export default function DashboardClient({
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (params.get("checkout_success") === "true") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowCheckoutSuccess(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActiveTab("billing");
         // Clear params so it doesn't show again on refresh
         window.history.replaceState(null, "", window.location.pathname);
       }
       if (params.get("checkout_cancel") === "true") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setShowCheckoutCancel(true);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActiveTab("billing");
         window.history.replaceState(null, "", window.location.pathname);
       }
       if (params.get("tab") === "edit") {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setActiveTab("edit");
         window.history.replaceState(null, "", window.location.pathname);
       }

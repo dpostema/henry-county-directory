@@ -5,7 +5,7 @@ export interface GHLPayload {
   event: string;
   source?: string;
   tags?: string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**
@@ -71,7 +71,7 @@ export async function dispatchGhlWebhook(payload: GHLPayload) {
     } else {
       console.log(`[GHL Webhook Success] Fired event: ${payload.event}`);
     }
-  } catch (err: any) {
-    console.error("[GHL Webhook Exception]", err.message);
+  } catch (err: unknown) {
+    console.error("[GHL Webhook Exception]", err instanceof Error ? err.message : String(err));
   }
 }

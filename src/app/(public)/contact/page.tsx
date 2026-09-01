@@ -14,7 +14,7 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-brandBg-app text-brandText-medium font-body flex flex-col">
       <Header sticky={false} />
-      
+
       <main className="flex-grow">
         {/* Simple Hero Section */}
         <div className="bg-slate-900 py-16 sm:py-24 text-center px-4">
@@ -28,7 +28,7 @@ export default function ContactPage() {
 
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            
+
             {/* Contact Info */}
             <div className="lg:col-span-1 space-y-8">
               <section className="bg-white p-6 rounded-card border border-brandBorder-light shadow-sm">
@@ -47,7 +47,7 @@ export default function ContactPage() {
                       </a>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start space-x-4">
                     <div className="p-3 bg-brandRed-muted rounded-full text-brandRed">
                       <Phone className="h-5 w-5" />
@@ -55,7 +55,7 @@ export default function ContactPage() {
                     <div>
                       <h4 className="text-sm font-bold text-brandText-dark mb-1">Call Us</h4>
                       <p className="text-sm text-brandText-medium">
-                        Mon-Fri, 9am - 5pm EST<br/>
+                        Mon-Fri, 9am - 5pm EST<br />
                         (770) 555-0199
                       </p>
                     </div>
@@ -68,7 +68,7 @@ export default function ContactPage() {
                     <div>
                       <h4 className="text-sm font-bold text-brandText-dark mb-1">Office</h4>
                       <p className="text-sm text-brandText-medium">
-                        {siteConfig.region.name}<br/>
+                        {siteConfig.region.name}<br />
                         Georgia, USA
                       </p>
                     </div>

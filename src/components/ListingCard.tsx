@@ -80,7 +80,7 @@ export default function ListingCard({ business }: ListingCardProps) {
     "https://images.unsplash.com/photo-1513161455079-7dc1de15ef3e?w=800&auto=format&fit=crop&q=60",
     "https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=800&auto=format&fit=crop&q=60"
   ];
-  const fallbackIndex = (business.name.length + (business.id ? business.id.charCodeAt(0) : 0)) % fallbackImages.length;
+  const fallbackIndex = ((business.name?.length || 0) + (business.id ? business.id.charCodeAt(0) : 0)) % fallbackImages.length;
   const fallbackImage = fallbackImages[fallbackIndex];
 
   return (

@@ -34,6 +34,8 @@ export async function searchBusinesses(supabase: SupabaseClient, params: SearchP
       is_featured,
       rating_avg,
       review_count,
+      latitude,
+      longitude,
       category:categories(name, slug, icon),
       city:cities(name, slug, state),
       media:listing_media(url),
@@ -128,7 +130,7 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number): nu
 
 // Operational status validation
 export function isBusinessOpenNow(hoursJson: any): boolean {
-  if (!hoursJson) return false;
+  if (!hoursJson || typeof hoursJson !== "object") return false;
   try {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const now = new Date();

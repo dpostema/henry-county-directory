@@ -454,7 +454,7 @@ export async function seedDummyDataAdminAction() {
       phone: "(770) 555-0210",
       email: "info@mcdonoughdental.com",
       website: "https://mcdonoughdental.com",
-      description: "Premier dental clinic offering comprehensive family oral healthcare, teeth whitening, clear aligners, and dental implants in ${siteConfig.region.name}.",
+      description: `Premier dental clinic offering comprehensive family oral healthcare, teeth whitening, clear aligners, and dental implants in ${siteConfig.region.name}.`,
       verification_level: "verified",
       status: "claimed",
       plan_tier: "pro",
@@ -531,7 +531,7 @@ export async function seedDummyDataAdminAction() {
       review_count: 31,
     },
     {
-      name: "${siteConfig.region.name} Day Spa & Wellness",
+      name: `${siteConfig.region.name} Day Spa & Wellness`,
       slug: "henry-county-day-spa-wellness",
       category_id: catMap.get("beauty-spa"),
       city_id: cityMap.get("mcdonough"),

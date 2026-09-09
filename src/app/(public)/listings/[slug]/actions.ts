@@ -13,7 +13,7 @@ import { siteConfig } from "@/config/site";
 
 export async function submitLead(formData: FormData) {
   const headersList = await headers();
-  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0];
+  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0].trim();
   const allowed = await checkRateLimit(ip, "submit_lead", 5, 300); // 5 leads per 5 min
   if (!allowed) return { error: "Too many messages sent. Please wait a few minutes." };
 
@@ -95,43 +95,51 @@ export async function submitLead(formData: FormData) {
     }
 
     // Sync to GoHighLevel (GHL)
-    const { dispatchGhlWebhook } = await import("@/services/ghl");
-    await dispatchGhlWebhook({
-      email,
-      name,
-      phone: phone || undefined,
-      event: "business-lead",
-      source: "Directory Listing",
-      tags: ["business-lead", aiTag, priority],
-      businessId,
-      message
-    });
+    try {
+      const { dispatchGhlWebhook } = await import("@/services/ghl");
+      await dispatchGhlWebhook({
+        email,
+        name,
+        phone: phone || undefined,
+        event: "business-lead",
+        source: "Directory Listing",
+        tags: ["business-lead", aiTag, priority],
+        businessId,
+        message
+      });
+    } catch (ghlErr) {
+      console.error("[SUBMIT LEAD GHL ERROR]", ghlErr);
+    }
 
     // Send email notification to business owner
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("email, name")
-      .eq("id", businessId)
-      .single();
+    try {
+      const { data: business } = await supabase
+        .from("businesses")
+        .select("email, name")
+        .eq("id", businessId)
+        .single();
 
-    if (business?.email) {
-      await sendEmail({
-        to: business.email,
-        subject: `New Lead for ${business.name}: ${aiTag}`,
-        html: generateEmailHtml(siteConfig.name, `
-          <h3>You have a new lead!</h3>
-          <p>Someone reached out to your business from your directory listing.</p>
-          <div class="box">
-            <p><strong>Name:</strong> ${name}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
-          </div>
-          <p><strong>Message:</strong></p>
-          <div class="box">
-            ${message}
-          </div>
-        `)
-      });
+      if (business?.email) {
+        await sendEmail({
+          to: business.email,
+          subject: `New Lead for ${business.name}: ${aiTag}`,
+          html: generateEmailHtml(siteConfig.name, `
+            <h3>You have a new lead!</h3>
+            <p>Someone reached out to your business from your directory listing.</p>
+            <div class="box">
+              <p><strong>Name:</strong> ${name}</p>
+              <p><strong>Email:</strong> ${email}</p>
+              <p><strong>Phone:</strong> ${phone || 'N/A'}</p>
+            </div>
+            <p><strong>Message:</strong></p>
+            <div class="box">
+              ${message}
+            </div>
+          `)
+        });
+      }
+    } catch (emailErr) {
+      console.error("[SUBMIT LEAD EMAIL ERROR]", emailErr);
     }
 
     return { success: "Your message has been sent to the business owner!" };
@@ -143,7 +151,7 @@ export async function submitLead(formData: FormData) {
 
 export async function submitReview(formData: FormData) {
   const headersList = await headers();
-  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0];
+  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0].trim();
   const allowed = await checkRateLimit(ip, "submit_review", 3, 300); // 3 reviews per 5 min
   if (!allowed) return { error: "Too many reviews submitted. Please wait." };
 
@@ -181,27 +189,31 @@ export async function submitReview(formData: FormData) {
     }
 
     // Send email notification to business owner
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("email, name")
-      .eq("id", businessId)
-      .single();
+    try {
+      const { data: business } = await supabase
+        .from("businesses")
+        .select("email, name")
+        .eq("id", businessId)
+        .single();
 
-    if (business?.email) {
-      await sendEmail({
-        to: business.email,
-        subject: `New Review for ${business.name}`,
-        html: generateEmailHtml(siteConfig.name, `
-          <h3>You received a new ${rating}-star review!</h3>
-          <p>Someone recently left a review on your directory listing.</p>
-          <div class="box">
-            <strong>Comment:</strong><br/>
-            ${comment || "No comment left."}
-          </div>
-          <p>Log in to your dashboard to reply to the review so it appears on your public listing.</p>
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
-        `)
-      });
+      if (business?.email) {
+        await sendEmail({
+          to: business.email,
+          subject: `New Review for ${business.name}`,
+          html: generateEmailHtml(siteConfig.name, `
+            <h3>You received a new ${rating}-star review!</h3>
+            <p>Someone recently left a review on your directory listing.</p>
+            <div class="box">
+              <strong>Comment:</strong><br/>
+              ${comment || "No comment left."}
+            </div>
+            <p>Log in to your dashboard to reply to the review so it appears on your public listing.</p>
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
+          `)
+        });
+      }
+    } catch (emailErr) {
+      console.error("[SUBMIT REVIEW EMAIL ERROR]", emailErr);
     }
 
     revalidatePath(`/listings/${slug}`);
@@ -214,7 +226,7 @@ export async function submitReview(formData: FormData) {
 
 export async function submitQuestion(formData: FormData) {
   const headersList = await headers();
-  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0];
+  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0].trim();
   const allowed = await checkRateLimit(ip, "submit_question", 10, 3600); // 10 Qs per hour
   if (!allowed) return { error: "Too many questions submitted. Please try again later." };
 
@@ -246,27 +258,31 @@ export async function submitQuestion(formData: FormData) {
       return { error: "Failed to submit question. Please try again later." };
     }
 
-    const { data: business } = await supabase
-      .from("businesses")
-      .select("email, name")
-      .eq("id", businessId)
-      .single();
+    try {
+      const { data: business } = await supabase
+        .from("businesses")
+        .select("email, name")
+        .eq("id", businessId)
+        .single();
 
-    if (business?.email) {
-      await sendEmail({
-        to: business.email,
-        subject: `New Question for ${business.name}`,
-        html: generateEmailHtml(siteConfig.name, `
-          <h3>Someone asked a question on your listing!</h3>
-          <p>A visitor is looking for more information about your business.</p>
-          <div class="box">
-            <strong>Question:</strong><br/>
-            ${question}
-          </div>
-          <p>Log in to your dashboard to answer it so it appears on your public listing.</p>
-          <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
-        `)
-      });
+      if (business?.email) {
+        await sendEmail({
+          to: business.email,
+          subject: `New Question for ${business.name}`,
+          html: generateEmailHtml(siteConfig.name, `
+            <h3>Someone asked a question on your listing!</h3>
+            <p>A visitor is looking for more information about your business.</p>
+            <div class="box">
+              <strong>Question:</strong><br/>
+              ${question}
+            </div>
+            <p>Log in to your dashboard to answer it so it appears on your public listing.</p>
+            <a href="${process.env.NEXT_PUBLIC_SITE_URL}/dashboard" class="button">Go to Dashboard</a>
+          `)
+        });
+      }
+    } catch (emailErr) {
+      console.error("[SUBMIT QUESTION EMAIL ERROR]", emailErr);
     }
 
     revalidatePath(`/listings/${slug}`);
@@ -279,7 +295,7 @@ export async function submitQuestion(formData: FormData) {
 
 export async function submitListingReport(formData: FormData) {
   const headersList = await headers();
-  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0];
+  const ip = (headersList.get("x-forwarded-for") || "127.0.0.1").split(",")[0].trim();
   const allowed = await checkRateLimit(ip, "submit_report", 5, 3600); // 5 reports per hour
   if (!allowed) return { error: "Too many reports submitted. Please try again later." };
 

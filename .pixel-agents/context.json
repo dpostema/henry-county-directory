@@ -1,0 +1,72 @@
+{
+  "projectName": "nextjs-directory-template",
+  "languages": [
+    "TypeScript",
+    "JavaScript"
+  ],
+  "frameworks": [
+    "Next.js (App Router)",
+    "React"
+  ],
+  "backend": [
+    "Node.js API"
+  ],
+  "database": [
+    "SQL / Relational DB"
+  ],
+  "testing": [
+    "Playwright"
+  ],
+  "auth": [
+    "Supabase Auth & DB"
+  ],
+  "styling": [
+    "TailwindCSS"
+  ],
+  "packageManager": "npm",
+  "directories": [
+    "design",
+    "docs",
+    "e2e",
+    "public",
+    "scripts",
+    "src",
+    "supabase",
+    "test-results"
+  ],
+  "files": [
+    ".env",
+    ".gitignore",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "components.json",
+    "eslint-errors.json",
+    "eslint.config.mjs",
+    "next-env.d.ts",
+    "next.config.ts",
+    "package-lock.json",
+    "package.json",
+    "playwright.config.ts",
+    "postcss.config.mjs",
+    "README.md",
+    "sentry.client.config.ts",
+    "sentry.edge.config.ts",
+    "sentry.server.config.ts",
+    "tailwind.config.ts",
+    "tsconfig.json",
+    "tsconfig.tsbuildinfo",
+    "vercel-deploy-log.txt"
+  ],
+  "recommendedSkills": [
+    "nextjs",
+    "react",
+    "tailwind",
+    "playwright-e2e",
+    "supabase",
+    "codebase-intelligence",
+    "security-audit",
+    "performance-profiling",
+    "testing"
+  ],
+  "agentSpecializations": {}
+}

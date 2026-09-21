@@ -278,12 +278,20 @@ export default function AdminPage() {
   }
 
   async function loadListings() {
-    const { data } = await supabase
-      .from("businesses")
-      .select("id, name, slug, status, plan_tier, is_featured, verification_level, category:categories(name), city:cities(name)")
-      .order("created_at", { ascending: false })
-      .limit(100);
-    setAllListings(data || []);
+    try {
+      const { data, error } = await supabase
+        .from("businesses")
+        .select("id, name, slug, status, plan_tier, is_featured, verification_level, category:categories(name), city:cities(name)")
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) throw error;
+      setAllListings(data || []);
+    } catch (err: unknown) {
+      // Catches TimeoutError (code 23) and other Supabase/network failures
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error("[loadListings] Failed to fetch listings:", msg);
+      setAllListings([]);
+    }
   }
 
   async function loadTaxonomy() {
@@ -995,7 +1003,8 @@ export default function AdminPage() {
                     <select
                       value={b.plan_tier}
                       onChange={async (e) => {
-                        await run(() => updateBusinessAdminAction(b.id, { plan_tier: e.target.value }));
+                        const newTier = e.target.value; // capture before async — stale event fix
+                        await run(() => updateBusinessAdminAction(b.id, { plan_tier: newTier }));
                         await loadListings();
                       }}
                       className="text-[10px] bg-slate-50 border border-brandBorder-light text-brandText-dark rounded px-2 py-1 mx-3 cursor-pointer focus:outline-none"
